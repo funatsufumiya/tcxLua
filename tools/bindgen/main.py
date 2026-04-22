@@ -4,7 +4,7 @@ import os
 
 from clang.cindex import CursorKind, Index, TokenKind
 
-genfile = "generated.h"
+genfile = "generated.cpp"
 
 prev = """
 #include "tcxLua.h"
@@ -25,14 +25,25 @@ target_filenames = [
 ]
 
 ignore_functions = {
-    "TrussC.h": []
+    "TrussC.h": [
+        "trussc#setup",
+        "trussc#cleanup",
+        "trussc#operator|",
+        "trussc#operator&"
+    ]
+}
+
+ignore_namespaces = {
+    "TrussC.h": [
+        "trussc::internal"
+    ]
 }
 
 ignore_classes = {
     "TrussC.h": []
 }
 
-functions = []
+functions_map = {}
 
 def visitNode(node, ns="", clazz=""):
     if node.kind.name == 'FUNCTION_DECL':
@@ -57,17 +68,28 @@ def visitNode(node, ns="", clazz=""):
                 "type": param_type
             })
 
-        if filename in ignore_classes:
-            if clazz in ignore_classes[filename]:
+        if filename in ignore_namespaces:
+            if ns in ignore_namespaces[filename]:
                 is_ignore = True
 
+        clazz_id = clazz if ns == "" else ns + "::" + clazz
+        if clazz == "":
+            clazz_id = ns
+
+        if filename in ignore_classes:
+            if clazz_id in ignore_classes[filename]:
+                is_ignore = True
+
+        id = clazz_id + "#" + function_name
+
         if filename in ignore_functions:
-            if clazz + "#" + function_name in ignore_functions[filename]:
+            if id in ignore_functions[filename]:
                 is_ignore = True
 
         if not is_ignore:
             obj = {
-                "type": "function",
+                "id": id,
+                # "type": "function",
                 "filename": filename,
                 "line_number": line_number,
                 "function_name": function_name,
@@ -83,7 +105,16 @@ def visitNode(node, ns="", clazz=""):
             # # write("" + obj)
             # outfile.write(str(obj) + "\n")
 
-            functions.append(obj)
+            detail_id = id + "@" + str(line_number)
+
+            if not (id in functions_map):
+                functions_map[id] = {}
+            
+            if detail_id in functions_map[id]:
+                pass
+            else:
+                functions_map[id][line_number] = obj
+
     elif node.kind.name == 'NAMESPACE':
         if ns == "":
             ns = node.spelling
@@ -106,13 +137,19 @@ def visitNode(node, ns="", clazz=""):
     for c in node.get_children():
         visitNode(c, ns, clazz)
 
-def bindFunctions(outfile, fns):
-    for fn in fns:
-        # print("FUNCTION_DECL", obj)
-        outfile.write(f"// {fn["filename"]}, LINE {fn["line_number"]}\n")
+def bindFunctions(outfile, fn_map):
+    for fns in fn_map.values():
+        overloads_count = len(fns)
+        for fn in fns.values():
+            # print("FUNCTION_DECL", obj)
+            outfile.write(f"// {fn["filename"]}, LINE {fn["line_number"]}\n")
+            if overloads_count > 1:
+                outfile.write(f"// overloads: {overloads_count}\n")
+            else:
+                pass
 
-        # # write("" + obj)
-        outfile.write(str(fn) + "\n")
+            # # write("" + obj)
+            outfile.write("// " + str(fn) + "\n")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -130,7 +167,7 @@ def main():
         f.write(prev)
         f.write("\n")
 
-        bindFunctions(f, functions)
+        bindFunctions(f, functions_map)
 
         f.write("\n")
         f.write(after)
