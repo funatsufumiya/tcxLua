@@ -8,7 +8,7 @@ target_filenames = [
     "TrussC.h"
 ]
 
-def visitNode(node, ns=""):
+def visitNode(node, ns="", clazz=""):
     if node.kind.name == 'FUNCTION_DECL':
         filepath = node.location.file.name
         filename = os.path.basename(filepath)
@@ -32,7 +32,8 @@ def visitNode(node, ns=""):
             "function_name": function_name,
             "params": params,
             "return_type": return_type,
-            "namespace": ns
+            "namespace": ns,
+            "class": clazz
         }
         print("FUNCTION_DECL", obj)
     elif node.kind.name == 'NAMESPACE':
@@ -43,9 +44,19 @@ def visitNode(node, ns=""):
     elif node.kind.name == 'CALL_EXPR':
         # print(declared_function_name, node.location.line)
         pass
+    elif node.kind.name == 'CLASS_TEMPLATE':
+        pass
+    elif node.kind.name == 'CLASS_DECL':
+        if clazz == "":
+            clazz = node.spelling
+        else:
+            clazz = clazz + "." + node.spelling
+    else:
+        # print("kind_name:", node.kind.name)
+        pass
 
     for c in node.get_children():
-        visitNode(c, ns)
+        visitNode(c, ns, clazz)
 
 
 def main():
