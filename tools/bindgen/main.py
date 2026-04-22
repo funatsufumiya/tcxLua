@@ -8,14 +8,28 @@ target_filenames = [
     "TrussC.h"
 ]
 
+ignore_functions = {
+    "TrussC.h": []
+}
+
+ignore_classes = {
+    "TrussC.h": []
+}
+
+functions = []
+
 def visitNode(node, ns="", clazz=""):
     if node.kind.name == 'FUNCTION_DECL':
+        is_ignore = False
+
         filepath = node.location.file.name
         filename = os.path.basename(filepath)
         if not (filename in target_filenames):
             return
         function_name = node.spelling
         return_type = node.result_type.spelling
+
+        line_number = node.location.line
 
         params = []
         for param in node.get_arguments():
@@ -27,15 +41,29 @@ def visitNode(node, ns="", clazz=""):
                 "type": param_type
             })
 
-        obj = {
-            "filename": filename,
-            "function_name": function_name,
-            "params": params,
-            "return_type": return_type,
-            "namespace": ns,
-            "class": clazz
-        }
-        print("FUNCTION_DECL", obj)
+        if filename in ignore_classes:
+            if clazz in ignore_classes[filename]:
+                is_ignore = True
+
+        if filename in ignore_functions:
+            if clazz + "#" + function_name in ignore_functions[filename]:
+                is_ignore = True
+
+        if not is_ignore:
+            obj = {
+                "type": "function",
+                "filename": filename,
+                "line_number": line_number,
+                "function_name": function_name,
+                "params": params,
+                "return_type": return_type,
+                "namespace": ns,
+                "class": clazz
+            }
+
+            print("FUNCTION_DECL", obj)
+
+            # found_functions.append(obj)
     elif node.kind.name == 'NAMESPACE':
         if ns == "":
             ns = node.spelling
@@ -124,7 +152,7 @@ def main():
     #         "comment": comment
     #     })
 
-    # print(json.dumps(functions, indent=4, ensure_ascii=False))
+    print(json.dumps(functions, indent=4, ensure_ascii=False))
 
 if __name__ == "__main__":
     main()
