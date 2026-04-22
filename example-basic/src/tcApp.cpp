@@ -16,7 +16,7 @@ void tcApp::update() {
 
 void tcApp::draw() {
     static std::string drawLuaSource = R"LUA(
-        clear(0.12)
+        clear(0.12, 1.0)
 
         -- Rotating box
         noFill()

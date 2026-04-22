@@ -170,15 +170,19 @@ def bindFunctions(outfile, fn_map):
                 # print("FUNCTION_DECL", obj)
                 outfile.write(f"    // {fn["filename"]}, LINE {fn["line_number"]}\n")
 
+                ret = ""
+                if fn["return_type"] != "void":
+                    ret = "return"
+
                 id = name if ns == "" else ns + "::" + name
                 if len(arg_names) == 0:
-                    outfile.write(f"    lua->set_function(\"{name}\", [](){lp} {id}(); {rp});\n")
+                    outfile.write(f"    lua->set_function(\"{name}\", [](){lp} {ret} {id}(); {rp});\n")
                 else:
                     # outfile.write(f"// args: {arg_names}\n")
                     # outfile.write(f"// args: {", ".join(arg_pairs)}\n")
                     sarg = ", ".join(arg_pairs) 
                     narg = ", ".join(arg_names) 
-                    outfile.write(f"    lua->set_function(\"{name}\", []({sarg}){lp} {id}({narg}); {rp});\n")
+                    outfile.write(f"    lua->set_function(\"{name}\", []({sarg}){lp} {ret} {id}({narg}); {rp});\n")
         else:
 
             outfile.write(f"    // overloads: {overloads_count}\n")
@@ -202,15 +206,19 @@ def bindFunctions(outfile, fn_map):
                 # print("FUNCTION_DECL", obj)
                 outfile.write(f"    // {fn["filename"]}, LINE {fn["line_number"]}\n")
 
+                ret = ""
+                if fn["return_type"] != "void":
+                    ret = "return"
+
                 id = name if ns == "" else ns + "::" + name
                 if len(arg_names) == 0:
-                    overloads.append(f"[](){lp} {id}(); {rp}")
+                    overloads.append(f"[](){lp} {ret} {id}(); {rp}")
                 else:
                     # outfile.write(f"// args: {arg_names}\n")
                     # outfile.write(f"// args: {", ".join(arg_pairs)}\n")
                     sarg = ", ".join(arg_pairs) 
                     narg = ", ".join(arg_names) 
-                    overloads.append(f"[]({sarg}){lp} {id}({narg}); {rp}")
+                    overloads.append(f"[]({sarg}){lp} {ret} {id}({narg}); {rp}")
 
                 i += 1
 
