@@ -1,5 +1,5 @@
 def main():
-    print("Hello from bindgen!")
+    print("Nothing implemented yet!")
 
 
 if __name__ == "__main__":
