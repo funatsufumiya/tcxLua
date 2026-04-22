@@ -1,9 +1,10 @@
 #pragma once
 
-namespace tcx::lua {
+// namespace tcx::lua {
 
-class Lua {
-
+class tcxLua {
+public:
+    void simpleCallTest();
 };
 
-} // namespace tcx::lua
+// } // namespace tcx::lua

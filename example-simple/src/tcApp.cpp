@@ -1,7 +1,7 @@
 #include "tcApp.h"
 
 void tcApp::setup() {
-
+    tcxLua.simpleCallTest();
 }
 
 void tcApp::update() {
