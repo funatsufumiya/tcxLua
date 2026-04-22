@@ -1,12 +1,7 @@
 #include "tcApp.h"
 
-#include "sol/sol.hpp"
-
 void tcApp::setup() {
-    sol::state lua;
-
-    // lua.open_libraries(sol::lib::base, sol::lib::jit);
-    lua.open_libraries(sol::lib::base);
+    sol::state lua = tcx_lua.getLuaState();
 
     sol::optional<sol::error> result = lua.safe_script("print(\"Hello from Lua!\")");
 	if (result.has_value()) {
