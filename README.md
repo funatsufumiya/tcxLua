@@ -9,7 +9,7 @@
 
 ## Bindgen
 
-Please read [tools/bindgen/README.md)](tools/bindgen/README.md) in detail.
+Please read [tools/bindgen/README.md](tools/bindgen/README.md) in detail.
 
 ```bash
 $ cd tools/bingen
