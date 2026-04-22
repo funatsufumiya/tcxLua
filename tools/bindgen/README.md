@@ -2,7 +2,7 @@
 
 Python script using libclang
 
-## Test
+## Generate
 
 ```bash
 $ pip install uv
