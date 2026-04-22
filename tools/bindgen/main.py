@@ -33,7 +33,7 @@ ignore_functions = {
         "trussc#operator|",
         "trussc#operator&",
 
-        # makes errors:
+        # makes errors on binding (reference problem etc):
         "trussc#intersectRect",
         "trussc#getBitmapStringBounds"
     ]
@@ -150,38 +150,73 @@ rp = "}"
 def bindFunctions(outfile, fn_map):
     for fns in fn_map.values():
         overloads_count = len(fns)
-        for fn in fns.values():
-            is_generated = False
+        if overloads_count == 1:
+            fn = None
+            i = 0
+            for k in fns.keys():
+                if i == 0:
+                    fn = fns[k]
+                    break
 
-            ns = fn["namespace"]
-            name = fn["function_name"]
-            arg_names = []
-            arg_pairs = []
-            for param in fn["params"]:
-                arg_names.append(param["name"])
-                arg_pairs.append(param["type"] + " " + param["name"])
+            if fn is not None:
+                ns = fn["namespace"]
+                name = fn["function_name"]
+                arg_names = []
+                arg_pairs = []
+                for param in fn["params"]:
+                    arg_names.append(param["name"])
+                    arg_pairs.append(param["type"] + " " + param["name"])
 
-            # print("FUNCTION_DECL", obj)
-            outfile.write(f"// {fn["filename"]}, LINE {fn["line_number"]}\n")
+                # print("FUNCTION_DECL", obj)
+                outfile.write(f"    // {fn["filename"]}, LINE {fn["line_number"]}\n")
 
-            if overloads_count > 1:
-                outfile.write(f"// overloads: {overloads_count}\n")
-            else:
                 id = name if ns == "" else ns + "::" + name
                 if len(arg_names) == 0:
-                    outfile.write(f"lua->set_function(\"{name}\", [](){lp} {id}(); {rp});\n")
+                    outfile.write(f"    lua->set_function(\"{name}\", [](){lp} {id}(); {rp});\n")
                 else:
                     # outfile.write(f"// args: {arg_names}\n")
                     # outfile.write(f"// args: {", ".join(arg_pairs)}\n")
                     sarg = ", ".join(arg_pairs) 
                     narg = ", ".join(arg_names) 
-                    outfile.write(f"lua->set_function(\"{name}\", []({sarg}){lp} {id}({narg}); {rp});\n")
+                    outfile.write(f"    lua->set_function(\"{name}\", []({sarg}){lp} {id}({narg}); {rp});\n")
+        else:
 
-                is_generated = True
+            outfile.write(f"    // overloads: {overloads_count}\n")
 
-            # # write("" + obj)
-            if not is_generated:
-                outfile.write("// " + str(fn) + "\n")
+            overloads = []
+            fn_name = ""
+
+            i = 0
+            for k in fns.keys():
+                fn = fns[k]
+
+                ns = fn["namespace"]
+                name = fn["function_name"]
+                fn_name = name
+                arg_names = []
+                arg_pairs = []
+                for param in fn["params"]:
+                    arg_names.append(param["name"])
+                    arg_pairs.append(param["type"] + " " + param["name"])
+
+                # print("FUNCTION_DECL", obj)
+                outfile.write(f"    // {fn["filename"]}, LINE {fn["line_number"]}\n")
+
+                id = name if ns == "" else ns + "::" + name
+                if len(arg_names) == 0:
+                    overloads.append(f"[](){lp} {id}(); {rp}")
+                else:
+                    # outfile.write(f"// args: {arg_names}\n")
+                    # outfile.write(f"// args: {", ".join(arg_pairs)}\n")
+                    sarg = ", ".join(arg_pairs) 
+                    narg = ", ".join(arg_names) 
+                    overloads.append(f"[]({sarg}){lp} {id}({narg}); {rp}")
+
+                i += 1
+
+            if fn_name != "":
+                overload_fns = ",\n        ".join(overloads)
+                outfile.write(f"    lua->set_function(\"{name}\", sol::overload(\n        {overload_fns}\n    ));")
 
 def main():
     parser = argparse.ArgumentParser()
