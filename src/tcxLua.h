@@ -4,7 +4,6 @@
 
 class tcxLua {
 public:
-    void simpleCallTest();
 };
 
 // } // namespace tcx::lua

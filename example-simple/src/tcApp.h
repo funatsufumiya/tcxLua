@@ -1,7 +1,6 @@
 #pragma once
 
 #include <TrussC.h>
-#include <tcxLua.h>
 using namespace std;
 using namespace tc;
 
@@ -23,6 +22,4 @@ public:
     void windowResized(int width, int height) override;
     void filesDropped(const vector<string>& files) override;
     void exit() override;
-
-    tcxLua tcxLua;
 };
