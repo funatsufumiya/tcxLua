@@ -1,9 +1,9 @@
 #include "tcApp.h"
 
 void tcApp::setup() {
-    sol::state lua = tcx_lua.getLuaState();
+    lua = tcx_lua.getLuaState();
 
-    sol::optional<sol::error> result = lua.safe_script("print(\"Hello from Lua!\")");
+    sol::optional<sol::error> result = lua->safe_script("print(\"Hello from Lua!\")");
 	if (result.has_value()) {
 		std::cerr << "Lua execution failed: "
 		          << result.value().what() << std::endl;
@@ -15,13 +15,19 @@ void tcApp::update() {
 }
 
 void tcApp::draw() {
-    clear(0.12f);
+    static std::string drawLuaSource = R"LUA(
+        clear(0.12f)
+    )LUA";
 
-    // Rotating box
-    noFill();
-    translate(getWindowWidth() / 2, getWindowHeight() / 2);
-    rotate(getElapsedTimef() *0.1f, getElapsedTimef() *0.15f, 0);
-    drawBox(200.0f);
+    // clear(0.12f);
+
+    // // Rotating box
+    // noFill();
+    // translate(getWindowWidth() / 2, getWindowHeight() / 2);
+    // rotate(getElapsedTimef() *0.1f, getElapsedTimef() *0.15f, 0);
+    // drawBox(200.0f);
+
+    // lua->script(drawLuaSource);
 }
 
 void tcApp::keyPressed(int key) {}

@@ -6,7 +6,10 @@
 
 class tcxLua {
 public:
-    sol::state getLuaState();
+    std::shared_ptr<sol::state> getLuaState();
+
+protected:
+    void setBindings(const std::shared_ptr<sol::state>& lua);
 };
 
 // } // namespace tcx::lua

@@ -25,4 +25,5 @@ public:
     void exit() override;
 
     tcxLua tcx_lua;
+    std::shared_ptr<sol::state> lua;
 };
