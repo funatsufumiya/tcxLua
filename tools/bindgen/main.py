@@ -4,6 +4,22 @@ import os
 
 from clang.cindex import CursorKind, Index, TokenKind
 
+genfile = "generated.h"
+
+prev = """
+#include "tcxLua.h"
+#include "TrussC.h"
+
+#include "sol/sol.hpp"
+using namespace tc;
+
+void tcxLua::setGeneratedBindings(const std::shared_ptr<sol::state>& lua){
+"""
+
+after = """
+}
+"""
+
 target_filenames = [
     "TrussC.h"
 ]
@@ -61,9 +77,13 @@ def visitNode(node, ns="", clazz=""):
                 "class": clazz
             }
 
-            print("FUNCTION_DECL", obj)
+            # print("FUNCTION_DECL", obj)
+            # outfile.write(f"// {filename}, LINE {line_number}\n")
 
-            # found_functions.append(obj)
+            # # write("" + obj)
+            # outfile.write(str(obj) + "\n")
+
+            functions.append(obj)
     elif node.kind.name == 'NAMESPACE':
         if ns == "":
             ns = node.spelling
@@ -86,6 +106,13 @@ def visitNode(node, ns="", clazz=""):
     for c in node.get_children():
         visitNode(c, ns, clazz)
 
+def bindFunctions(outfile, fns):
+    for fn in fns:
+        # print("FUNCTION_DECL", obj)
+        outfile.write(f"// {fn["filename"]}, LINE {fn["line_number"]}\n")
+
+        # # write("" + obj)
+        outfile.write(str(fn) + "\n")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -99,60 +126,16 @@ def main():
 
     visitNode(tree.cursor)
 
-    # comments = {}
-    # for token in tree.cursor.get_tokens():
-    #     if token.kind == TokenKind.COMMENT:
-    #         line_number = token.location.line
-    #         comment = token.spelling
+    with open(genfile, mode='w') as f:
+        f.write(prev)
+        f.write("\n")
 
-    #         comments[line_number] = comment
+        bindFunctions(f, functions)
 
-    # functions = []
-    # for child in tree.cursor.get_children():
-    #     if child.kind == CursorKind.FUNCTION_DECL:
-    #         pass
-    #     elif child.kind == CursorKind.NAMESPACE:
-    #         print("namespace:", child)
-    #         continue
-    #     else:
-    #         # print(child.kind)
-    #         continue
+        f.write("\n")
+        f.write(after)
 
-    #     if child.location.file is None:
-    #         continue
-
-    #     filepath = child.location.file.name
-    #     filename = os.path.basename(filepath)
-
-    #     if filename != input_filename:
-    #         continue
-
-    #     function_name = child.spelling
-    #     return_type = child.result_type.spelling
-
-    #     line_number = child.location.line
-    #     comment = comments.get(line_number, "")
-
-    #     params = []
-    #     for param in child.get_arguments():
-    #         param_name = param.spelling
-    #         param_type = param.type.spelling
-
-    #         params.append({
-    #             "name": param_name,
-    #             "type": param_type
-    #         })
-
-    #     functions.append({
-    #         "name": function_name,
-    #         "return_type": return_type,
-    #         "params": params,
-    #         "filename": filename,
-    #         "line_number": line_number,
-    #         "comment": comment
-    #     })
-
-    print(json.dumps(functions, indent=4, ensure_ascii=False))
+    print(f"Generated {genfile}")
 
 if __name__ == "__main__":
     main()
