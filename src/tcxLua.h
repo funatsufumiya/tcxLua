@@ -11,6 +11,7 @@ public:
 
 protected:
     void setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua);
+    void setTypeBindings(const std::shared_ptr<sol::state>& lua);
 };
 
 // } // namespace tcx::lua
