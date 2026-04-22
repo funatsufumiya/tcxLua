@@ -224,7 +224,7 @@ def bindFunctions(outfile, fn_map):
 
             if fn_name != "":
                 overload_fns = ",\n        ".join(overloads)
-                outfile.write(f"    lua->set_function(\"{name}\", sol::overload(\n        {overload_fns}\n    ));")
+                outfile.write(f"    lua->set_function(\"{name}\", sol::overload(\n        {overload_fns}\n    ));\n")
 
 def main():
     parser = argparse.ArgumentParser()
