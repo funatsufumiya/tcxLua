@@ -16,7 +16,7 @@ void tcApp::update() {
 
 void tcApp::draw() {
     static std::string drawLuaSource = R"LUA(
-        clear(0.12f)
+        clear(0.12)
     )LUA";
 
     // clear(0.12f);
@@ -27,7 +27,7 @@ void tcApp::draw() {
     // rotate(getElapsedTimef() *0.1f, getElapsedTimef() *0.15f, 0);
     // drawBox(200.0f);
 
-    // lua->script(drawLuaSource);
+    lua->script(drawLuaSource);
 }
 
 void tcApp::keyPressed(int key) {}

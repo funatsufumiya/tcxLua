@@ -18,7 +18,16 @@ std::shared_ptr<sol::state> tcxLua::getLuaState(){
 }
 
 void tcxLua::setBindings(const std::shared_ptr<sol::state>& lua){
-    // lua->set_function("clear", &tc::clear);
+    // lua->set_function("clear", sol::overload( &trussc::clear ));
+    // lua->set_function("clear", &trussc::clear);
+
+    lua->set_function("clear", sol::overload(
+        [](){ trussc:clear(); },
+        [](float gray, float a){ trussc:clear(gray, a); },
+        [](float gray){ trussc:clear(gray, 1.0f); },
+        [](const Color& c){ trussc:clear(c); }
+    ));
+
 }
 
 // } // namespace tcx::lua
