@@ -26,4 +26,6 @@ public:
 
     tcxLua tcx_lua;
     std::shared_ptr<sol::state> lua;
+
+    bool isFirstDraw = true;
 };

@@ -15,25 +15,25 @@ void tcApp::update() {
 }
 
 void tcApp::draw() {
-    static std::string drawLuaSource = R"LUA(
-        clear(0.12, 1.0)
+    if(isFirstDraw){
+        std::string drawLuaSource = R"LUA(
+            function draw()
+                clear(0.12, 1.0)
 
-        -- Rotating box
-        noFill()
-        translate(getWindowWidth() / 2, getWindowHeight() / 2)
-        rotate(getElapsedTimef() * 0.1, getElapsedTimef() * 0.15, 0);
-        drawBox(200.0)
-    )LUA";
+                -- Rotating box
+                noFill()
+                translate(getWindowWidth() / 2, getWindowHeight() / 2)
+                rotate(getElapsedTimef() * 0.1, getElapsedTimef() * 0.15, 0);
+                drawBox(200.0)
+            end
+        )LUA";
 
-    // clear(0.12f);
+        lua->script(drawLuaSource);
 
-    // // Rotating box
-    // noFill();
-    // translate(getWindowWidth() / 2, getWindowHeight() / 2);
-    // rotate(getElapsedTimef() *0.1f, getElapsedTimef() *0.15f, 0);
-    // drawBox(200.0f);
+        isFirstDraw = false;
+    }
 
-    lua->script(drawLuaSource);
+    lua->script("draw()");
 }
 
 void tcApp::keyPressed(int key) {}
