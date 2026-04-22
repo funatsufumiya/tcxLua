@@ -12,10 +12,12 @@ if(USE_LUAJIT)
     set(LUA_C_SOURCES "")
     set(LUA_CXX_SOURCES "")
     set(LUA_HEADERS "")
+    set(BINGEN_GENERATED_SOURCES "")
 else()
     file(GLOB LUA_CXX_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/lua/*.cpp)
     file(GLOB LUA_C_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/lua/*.c)
     file(GLOB LUA_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/lua/*.h)
+    file(GLOB BINGEN_GENERATED_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/generated/*.cpp)
 endif()
 
 file(GLOB ADDON_INCLUDE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
@@ -29,6 +31,7 @@ add_library(${ADDON_NAME} STATIC
     ${LUA_HEADERS}
     ${ADDON_INCLUDE_HEADERS}
     ${ADDON_HEADERS}
+    ${BINGEN_GENERATED_SOURCES}
 )
 
 target_include_directories(${ADDON_NAME} PUBLIC

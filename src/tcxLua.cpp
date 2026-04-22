@@ -18,6 +18,8 @@ std::shared_ptr<sol::state> tcxLua::getLuaState(){
 }
 
 void tcxLua::setBindings(const std::shared_ptr<sol::state>& lua){
+    setTrussCGeneratedBindings(lua);
+
     // lua->set_function("clear", sol::overload( &trussc::clear ));
     // lua->set_function("clear", &trussc::clear);
 

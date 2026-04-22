@@ -4,16 +4,18 @@ import os
 
 from clang.cindex import CursorKind, Index, TokenKind
 
-genfile = "generated.cpp"
+genfile = "trussc_generated.cpp"
 
 prev = """
+// WARNING: This file is auto-generated!
+
 #include "tcxLua.h"
 #include "TrussC.h"
 
 #include "sol/sol.hpp"
 using namespace tc;
 
-void tcxLua::setGeneratedBindings(const std::shared_ptr<sol::state>& lua){
+void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
 """
 
 after = """
@@ -29,7 +31,11 @@ ignore_functions = {
         "trussc#setup",
         "trussc#cleanup",
         "trussc#operator|",
-        "trussc#operator&"
+        "trussc#operator&",
+
+        # makes errors:
+        "trussc#intersectRect",
+        "trussc#getBitmapStringBounds"
     ]
 }
 
@@ -137,19 +143,45 @@ def visitNode(node, ns="", clazz=""):
     for c in node.get_children():
         visitNode(c, ns, clazz)
 
+
+lp = "{"
+rp = "}"
+
 def bindFunctions(outfile, fn_map):
     for fns in fn_map.values():
         overloads_count = len(fns)
         for fn in fns.values():
+            is_generated = False
+
+            ns = fn["namespace"]
+            name = fn["function_name"]
+            arg_names = []
+            arg_pairs = []
+            for param in fn["params"]:
+                arg_names.append(param["name"])
+                arg_pairs.append(param["type"] + " " + param["name"])
+
             # print("FUNCTION_DECL", obj)
             outfile.write(f"// {fn["filename"]}, LINE {fn["line_number"]}\n")
+
             if overloads_count > 1:
                 outfile.write(f"// overloads: {overloads_count}\n")
             else:
-                pass
+                id = name if ns == "" else ns + "::" + name
+                if len(arg_names) == 0:
+                    outfile.write(f"lua->set_function(\"{name}\", [](){lp} {id}(); {rp});\n")
+                else:
+                    # outfile.write(f"// args: {arg_names}\n")
+                    # outfile.write(f"// args: {", ".join(arg_pairs)}\n")
+                    sarg = ", ".join(arg_pairs) 
+                    narg = ", ".join(arg_names) 
+                    outfile.write(f"lua->set_function(\"{name}\", []({sarg}){lp} {id}({narg}); {rp});\n")
+
+                is_generated = True
 
             # # write("" + obj)
-            outfile.write("// " + str(fn) + "\n")
+            if not is_generated:
+                outfile.write("// " + str(fn) + "\n")
 
 def main():
     parser = argparse.ArgumentParser()
