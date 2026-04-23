@@ -19,7 +19,7 @@
 - Texture, Image, Pixels
 - Mesh
 - Shader
-- EasyCam, Light
+- EasyCam, Light, Material
 
 ## Development
 

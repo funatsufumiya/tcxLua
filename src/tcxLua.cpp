@@ -648,10 +648,58 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     lighttype_t["Point"] = sol::var(LightType::Point);
     lighttype_t["Spot"] = sol::var(LightType::Spot);
 
+    sol::usertype<Material> material_t = lua->new_usertype<Material>("Material",
+        sol::constructors<Material()>()
+    );
+    material_t["getBaseColor"] = &Material::getBaseColor;
+    material_t["setBaseColor"] = sol::overload(
+        [](Material& m, const Color& c){ return m.setBaseColor(c); },
+        [](Material& m, float a, float b, float c){ return m.setBaseColor(a,b,c); },
+        [](Material& m, float a, float b, float c, float d){ return m.setBaseColor(a,b,c,d); }
+    );
+    material_t["setMetallic"] = &Material::setMetallic;
+    material_t["getMetallic"] = &Material::getMetallic;
+    material_t["setRoughness"] = &Material::setRoughness;
+    material_t["getRoughness"] = &Material::getRoughness;
+    material_t["setAo"] = &Material::setAo;
+    material_t["getAo"] = &Material::getAo;
+    material_t["getEmissiveStrength"] = &Material::getEmissiveStrength;
+    material_t["setEmissiveStrength"] = &Material::setEmissiveStrength;
+    material_t["getEmissive"] = &Material::getEmissive;
+    material_t["setEmissive"] = sol::overload(
+        [](Material& m, const Color& c){ return m.setEmissive(c); },
+        [](Material& m, float a, float b, float c){ return m.setEmissive(a,b,c); }
+    );
+    material_t["setMetallic"] = sol::var(&Material::setMetallic);
+    material_t["gold"] = sol::var(&Material::gold);
+    material_t["silver"] = sol::var(&Material::silver);
+    material_t["copper"] = sol::var(&Material::copper);
+    material_t["iron"] = sol::var(&Material::iron);
+    material_t["bronze"] = sol::var(&Material::bronze);
+    material_t["emerald"] = sol::var(&Material::emerald);
+    material_t["ruby"] = sol::var(&Material::ruby);
+    material_t["plastic"] = sol::var(&Material::plastic);
+    material_t["rubber"] = sol::var(&Material::rubber);
+    material_t["fromPhong"] = sol::overload(
+        [](Material& m, const Color& d, const Color& p, float s){ return m.fromPhong(d, p, s); },
+        [](Material& m, const Color& d, const Color& p, float s, const Color& e){ return m.fromPhong(d, p, s, e); }
+    );
+    material_t["setNormalMap"] = &Material::setNormalMap;
+    material_t["getNormalMap"] = &Material::getNormalMap;
+    material_t["hasNormalMap"] = &Material::hasNormalMap;
 
-    // sol::usertype<Material> material_t = lua->new_usertype<Material>("Material",
-    //     sol::constructors<Material()>()
-    // );
+    material_t["setBaseColorTexture"] = &Material::setBaseColorTexture;
+    material_t["getBaseColorTexture"] = &Material::getBaseColorTexture;
+    material_t["hasBaseColorTexture"] = &Material::hasBaseColorTexture;
+    material_t["setMetallicRoughnessTexture"] = &Material::setMetallicRoughnessTexture;
+    material_t["getMetallicRoughnessTexture"] = &Material::getMetallicRoughnessTexture;
+    material_t["hasMetallicRoughnessTexture"] = &Material::hasMetallicRoughnessTexture;
+    material_t["setEmissiveTexture"] = &Material::setEmissiveTexture;
+    material_t["getEmissiveTexture"] = &Material::getEmissiveTexture;
+    material_t["hasEmissiveTexture"] = &Material::hasEmissiveTexture;
+    material_t["setOcclusionTexture"] = &Material::setOcclusionTexture;
+    material_t["getOcclusionTexture"] = &Material::getOcclusionTexture;
+    material_t["hasOcclusionTexture"] = &Material::hasOcclusionTexture;
 }
 
 struct Colors{};
