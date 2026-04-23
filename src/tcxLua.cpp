@@ -213,6 +213,41 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     mat4_type["perspective"] = &Mat4::perspective;
     mat4_type["frustum"] = &Mat4::frustum;
     
+    sol::usertype<Color> color_type = lua->new_usertype<Color>("Color",
+        sol::constructors<Color(), Color(float), Color(float, float), Color(float, float, float), Color(float, float, float, float), Color(const Color&)>(),
+        sol::meta_function::addition,
+        [](const Color& a, const Color& b){ return a + b; },
+        sol::meta_function::subtraction,
+        [](const Color& a, const Color& b){ return a - b; },
+        sol::meta_function::multiplication,
+        [](const Color& a, float b){ return a * b; },
+        sol::meta_function::division,
+        [](const Color& a, float b){ return a / b; }
+    );
+
+    color_type["r"] = &Color::r;
+    color_type["g"] = &Color::g;
+    color_type["b"] = &Color::b;
+    color_type["a"] = &Color::a;
+
+    color_type["fromBytes"] = &Color::fromBytes;
+    color_type["fromHex"] = &Color::fromHex;
+    color_type["fromHSB"] = &Color::fromHSB;
+    color_type["fromOKLCH"] = &Color::fromOKLCH;
+    color_type["fromOKLab"] = &Color::fromOKLab;
+    color_type["fromLinear"] = &Color::fromLinear;
+    color_type["toHex"] = &Color::toHex;
+    color_type["toLinear"] = &Color::toLinear;
+    color_type["toHSB"] = &Color::toHSB;
+    color_type["toOKLab"] = &Color::toOKLab;
+    color_type["toOKLCH"] = &Color::toOKLCH;
+    color_type["clamped"] = &Color::clamped;
+    color_type["lerpRGB"] = &Color::lerpRGB;
+    color_type["lerpLinear"] = &Color::lerpLinear;
+    color_type["lerpHSB"] = &Color::lerpHSB;
+    color_type["lerpOKLab"] = &Color::lerpOKLab;
+    color_type["lerpOKLCH"] = &Color::lerpOKLCH;
+    color_type["lerp"] = &Color::lerp;
 }
 
 // } // namespace tcx::lua

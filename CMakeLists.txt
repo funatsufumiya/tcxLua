@@ -38,4 +38,10 @@ target_include_directories(${ADDON_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+if(WIN32 AND MSVC)
+    # MSVC on Windows: enable large object support to avoid
+    # "too many sections" (/bigobj)
+    target_compile_options(${ADDON_NAME} PRIVATE /bigobj)
+endif()
+
 target_link_libraries(${ADDON_NAME} PUBLIC TrussC)

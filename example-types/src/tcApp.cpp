@@ -16,6 +16,13 @@ void tcApp::setup() {
             return "Vec3(".. v.x .. ", ".. v.y .. ", ".. v.z .. ")"
         end
 
+        function strc(c)
+            return "Color(".. c.r .. ", ".. c.g .. ", ".. c.b .. ", ".. c.a .. ")"
+        end
+
+        local c = Color.new(1.0, 0.0, 0.0)
+        print("c = " .. strc(c))
+
         local v1 = Vec2.new(1.0, 2.0)
         local v2 = Vec2.new(3.0, 4.0)
         print("v1 = " .. strv2(v1))
