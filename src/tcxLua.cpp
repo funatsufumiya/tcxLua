@@ -181,7 +181,13 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
                  float m10, float m11, float m12, float m13,
                  float m20, float m21, float m22, float m23,
                  float m30, float m31, float m32, float m33),
-            Mat4(const Mat4&)>()
+            Mat4(const Mat4&)>(),
+        sol::meta_function::multiplication,
+        sol::overload(
+           [](const Mat4& a, const Mat4& b){ return a * b; },
+           [](const Mat4& a, const Vec3& b){ return a * b; },
+           [](const Mat4& a, const Vec4& b){ return a * b; }
+        )
     );
     mat4_type["at"] = [](Mat4& m, int raw, int col) -> float { return (float)(m.at(raw, col)); }; // WORKAROUND
     mat4_type["set"] = [](Mat4& m, int raw, int col, int v){ m.at(raw, col) = v; }; // WORKAROUND
