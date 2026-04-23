@@ -336,7 +336,7 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     mesh_type["drawWireframe"] = &Mesh::drawWireframe;
 
     sol::usertype<Fbo> fbo_type = lua->new_usertype<Fbo>("Fbo",
-        sol::constructors<Fbo()>() // TODO: move constructor?
+        sol::constructors<Fbo()>() // FIXME: move constructor?
     );
 
     fbo_type["allocate"] = sol::overload(
@@ -366,6 +366,71 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     fbo_type["getColorImage"] = &Fbo::getColorImage;
     fbo_type["getTextureView"] = &Fbo::getTextureView;
     fbo_type["getSampler"] = &Fbo::getSampler;
+
+    sol::usertype<Texture> tex_type = lua->new_usertype<Texture>("Texture",
+        sol::constructors<Texture()>() // FIXME: move constructor?
+    );
+    tex_type["allocate"] = sol::overload(
+        [](Texture& f, int w, int h){ return f.allocate(w, h); },
+        [](Texture& f, int w, int h, int c){ return f.allocate(w, h, c); },
+        [](Texture& f, int w, int h, int c, TextureUsage t){ return f.allocate(w, h, c, t); },
+        [](Texture& f, int w, int h, int c, TextureUsage t, int s){ return f.allocate(w, h, c, t, s); },
+        [](Texture& f, int w, int h, TextureFormat c){ return f.allocate(w, h, c); },
+        [](Texture& f, int w, int h, TextureFormat c, TextureUsage t){ return f.allocate(w, h, c, t); },
+        [](Texture& f, int w, int h, TextureFormat c, TextureUsage t, int s){ return f.allocate(w, h, c, t, s); },
+        [](Texture& f, const Pixels& w){ return f.allocate(w); },
+        [](Texture& f, const Pixels& w, TextureUsage c){ return f.allocate(w, c); },
+        [](Texture& f, const Pixels& w, TextureUsage c, bool m){ return f.allocate(w, c, m); }
+    );
+    tex_type["allocateCubemap"] = sol::overload(
+        [](Texture& f, int w, TextureFormat c){ return f.allocateCubemap(w, c); },
+        [](Texture& f, int w, TextureFormat c, TextureUsage t){ return f.allocateCubemap(w, c, t); },
+        [](Texture& f, int w, TextureFormat c, TextureUsage t, int s){ return f.allocateCubemap(w, c, t, s); }
+    );
+    tex_type["uploadCubemapFace"] = &Texture::uploadCubemapFace;
+    tex_type["uploadCubemapMip"] = &Texture::uploadCubemapMip;
+    tex_type["getCubemapFaceAttachmentView"] = &Texture::getCubemapFaceAttachmentView;
+    tex_type["isCubemap"] = &Texture::isCubemap;
+    tex_type["getNumMipLevels"] = &Texture::getNumMipLevels;
+    tex_type["allocateCompressed"] = &Texture::allocateCompressed;
+    tex_type["updateCompressed"] = &Texture::updateCompressed;
+    tex_type["isCompressed"] = &Texture::isCompressed;
+    tex_type["clear"] = &Texture::clear;
+    tex_type["isAllocated"] = &Texture::isAllocated;
+    tex_type["getWidth"] = &Texture::getWidth;
+    tex_type["getHeight"] = &Texture::getHeight;
+    tex_type["getChannels"] = &Texture::getChannels;
+    tex_type["getUsage"] = &Texture::getUsage;
+    tex_type["getSampleCount"] = &Texture::getSampleCount;
+    tex_type["getPixelFormat"] = &Texture::getPixelFormat;
+    tex_type["loadData"] = sol::overload(
+        [](Texture& t, const Pixels& p){ return t.loadData(p); },
+        [](Texture& t, const unsigned char* d, int w, int h, int c){ return t.loadData(d, w, h, c); },
+        [](Texture& t, const void* d, int w, int h, int c){ return t.loadData(d, w, h, c); }
+    );
+    tex_type["setMinFilter"] = &Texture::setMinFilter;
+    tex_type["setMagFilter"] = &Texture::setMagFilter;
+    tex_type["setFilter"] = &Texture::setFilter;
+    tex_type["getMinFilter"] = &Texture::getMinFilter;
+    tex_type["getMagFilter"] = &Texture::getMagFilter;
+    tex_type["setPremultipliedAlpha"] = &Texture::setPremultipliedAlpha;
+    tex_type["isPremultipliedAlpha"] = &Texture::isPremultipliedAlpha;
+    tex_type["setWrapU"] = &Texture::setWrapU;
+    tex_type["setWrapV"] = &Texture::setWrapV;
+    tex_type["setWrap"] = &Texture::setWrap;
+    tex_type["getWrapU"] = &Texture::getWrapU;
+    tex_type["getWrapV"] = &Texture::getWrapV;
+    tex_type["draw"] = sol::overload(
+        [](Texture& t, float x, float y){ return t.draw(x, y); },
+        [](Texture& t, float x, float y, float w, float h){ return t.draw(x, y, w, h); }
+    );
+    tex_type["drawSubsection"] = &Texture::drawSubsection;
+    tex_type["bind"] = &Texture::bind;
+    tex_type["unbind"] = &Texture::unbind;
+    tex_type["getImage"] = &Texture::getImage;
+    tex_type["getView"] = &Texture::getView;
+    tex_type["getSampler"] = &Texture::getSampler;
+    tex_type["getAttachmentView"] = &Texture::getAttachmentView;
 }
 
 struct Colors{};
