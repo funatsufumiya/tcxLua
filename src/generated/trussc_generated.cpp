@@ -493,6 +493,32 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](Vec3 pos, float radius, float height, int resolution){  trussc::drawCone(pos, radius, height, resolution); },
         [](float x, float y, float z, float radius, float height, int resolution){  trussc::drawCone(x, y, z, radius, height, resolution); }
     ));
+    // tc3DGraphics.h, LINE 25
+    lua->set_function("addLight", [](Light & light){  trussc::addLight(light); });
+    // tc3DGraphics.h, LINE 37
+    lua->set_function("removeLight", [](Light & light){  trussc::removeLight(light); });
+    // tc3DGraphics.h, LINE 46
+    lua->set_function("clearLights", [](){  trussc::clearLights(); });
+    // tc3DGraphics.h, LINE 51
+    lua->set_function("getNumLights", [](){ return trussc::getNumLights(); });
+    // tc3DGraphics.h, LINE 60
+    lua->set_function("setMaterial", [](Material & material){  trussc::setMaterial(material); });
+    // tc3DGraphics.h, LINE 65
+    lua->set_function("clearMaterial", [](){  trussc::clearMaterial(); });
+    // tc3DGraphics.h, LINE 76
+    lua->set_function("beginShadowPass", [](Light & light){  trussc::beginShadowPass(light); });
+    // tc3DGraphics.h, LINE 85
+    lua->set_function("endShadowPass", [](){  trussc::endShadowPass(); });
+    // tc3DGraphics.h, LINE 90
+    lua->set_function("shadowDraw", [](const Mesh & mesh){  trussc::shadowDraw(mesh); });
+    // tc3DGraphics.h, LINE 98
+    // tc3DGraphics.h, LINE 102
+    lua->set_function("setCameraPosition", sol::overload(
+        [](const Vec3 & pos){  trussc::setCameraPosition(pos); },
+        [](float x, float y, float z){  trussc::setCameraPosition(x, y, z); }
+    ));
+    // tc3DGraphics.h, LINE 106
+    lua->set_function("getCameraPosition", [](){ return trussc::getCameraPosition(); });
 
 
 }

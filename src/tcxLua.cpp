@@ -352,6 +352,7 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     );
     fbo_type["clearColor"] = &Fbo::clearColor;
     fbo_type["end"] = &Fbo::end;
+    fbo_type["end_fbo"] = &Fbo::end;
     fbo_type["readPixels"] = &Fbo::readPixels;
     fbo_type["readPixelsFloat"] = &Fbo::readPixelsFloat;
     fbo_type["copyTo"] = &Fbo::copyTo;
@@ -509,6 +510,7 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     shader_type["isLoaded"] = &Shader::isLoaded;
     shader_type["begin"] = &Shader::begin;
     shader_type["end"] = &Shader::end;
+    shader_type["end_shader"] = &Shader::end;
     shader_type["setUniform"] = sol::overload(
         [](Shader& f, int s, float v){ return f.setUniform(s, v); },
         [](Shader& f, int s, const Vec2& v){ return f.setUniform(s, v); },
@@ -536,6 +538,7 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
 
     easycam_t["begin"] = &EasyCam::begin;
     easycam_t["end"] = &EasyCam::end;
+    easycam_t["end_cam"] = &EasyCam::end;
     easycam_t["reset"] = &EasyCam::reset;
     easycam_t["setTarget"] = sol::overload(
         [](EasyCam& m, float x, float y, float z){ return m.setTarget(x, y, z); },
