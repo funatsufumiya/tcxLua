@@ -25,6 +25,11 @@ void tcApp::setup() {
         print("tan(1) = " .. tan(1))
         print("abs(-1) = " .. abs(-1))
         print("floor(1.5) = " .. floor(1.5))
+        print("random() = " .. random())
+        print("random() = " .. random())
+        print("randomInt(1, 10) = " .. randomInt(1, 10))
+        print("randomInt(1, 10) = " .. randomInt(1, 10))
+        print("deg2rad(180) = " .. deg2rad(180))
     )LUA";
 
     sol::optional<sol::error> result = lua->safe_script(setupLuaSource);
