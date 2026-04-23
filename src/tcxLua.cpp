@@ -10,7 +10,7 @@ std::shared_ptr<sol::state> tcxLua::getLuaState(){
     std::shared_ptr<sol::state> lua = std::make_shared<sol::state>();
 
     // lua->open_libraries(sol::lib::base, sol::lib::jit);
-    lua->open_libraries(sol::lib::base);
+    lua->open_libraries(sol::lib::base, sol::lib::math);
 
     setBindings(lua);
 
