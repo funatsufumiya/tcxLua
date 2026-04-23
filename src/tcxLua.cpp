@@ -642,6 +642,16 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     light_t["disable"] = &Light::disable;
     light_t["isEnabled"] = &Light::isEnabled;
     light_t["calculate"] = &Light::calculate;
+
+    sol::usertype<LightType> lighttype_t = lua->new_usertype<LightType>("LightType");
+    lighttype_t["Directional"] = sol::var(LightType::Directional);
+    lighttype_t["Point"] = sol::var(LightType::Point);
+    lighttype_t["Spot"] = sol::var(LightType::Spot);
+
+
+    // sol::usertype<Material> material_t = lua->new_usertype<Material>("Material",
+    //     sol::constructors<Material()>()
+    // );
 }
 
 struct Colors{};
