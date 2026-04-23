@@ -454,6 +454,41 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     img_type["update"] = &Image::update;
     img_type["setDirty"] = &Image::setDirty;
     img_type["getTexture"] = [](Image& f) -> Texture& { return f.getTexture(); };
+
+    sol::usertype<Pixels> pix_type = lua->new_usertype<Pixels>("Pixels",
+        sol::constructors<Pixels()>() // FIXME: move constructor?
+    );
+    pix_type["allocate"] = sol::overload(
+        [](Pixels& f, int w, int h){ return f.allocate(w, h); },
+        [](Pixels& f, int w, int h, int c){ return f.allocate(w, h, c); },
+        [](Pixels& f, int w, int h, int c, PixelFormat t){ return f.allocate(w, h, c, t); }
+    );
+    pix_type["clear"] = &Pixels::clear;
+    pix_type["isAllocated"] = &Pixels::isAllocated;
+    pix_type["getWidth"] = &Pixels::getWidth;
+    pix_type["getHeight"] = &Pixels::getHeight;
+    pix_type["getChannels"] = &Pixels::getChannels;
+    pix_type["getFormat"] = &Pixels::getFormat;
+    pix_type["isFloat"] = &Pixels::isFloat;
+    pix_type["getTotalBytes"] = &Pixels::getTotalBytes;
+    pix_type["getData"] = [](Pixels& f) -> unsigned char* { return f.getData(); };
+    pix_type["getDataF32"] = [](Pixels& f) -> float* { return f.getDataF32(); };
+    pix_type["getDataVoid"] = [](Pixels& f) -> void* { return f.getDataVoid(); };
+    pix_type["getColor"] = &Pixels::getColor;
+    pix_type["setColor"] = &Pixels::setColor;
+    pix_type["setFromPixels"] = &Pixels::setFromPixels;
+    pix_type["setFromFloats"] = &Pixels::setFromFloats;
+    pix_type["copyTo"] = &Pixels::copyTo;
+    pix_type["clone"] = &Pixels::clone;
+    pix_type["load"] = &Pixels::load;
+    pix_type["loadHDR"] = &Pixels::loadHDR;
+    pix_type["loadPlatform"] = &Pixels::loadPlatform;
+    pix_type["loadFromMemory"] = &Pixels::loadFromMemory;
+    pix_type["save"] = &Pixels::save;
+
+    sol::usertype<PixelFormat> pix_format_type = lua->new_usertype<PixelFormat>("PixelFormat");
+    pix_format_type["U8"] = sol::var(PixelFormat::U8);
+    pix_format_type["F32"] = sol::var(PixelFormat::F32);
 }
 
 struct Colors{};
