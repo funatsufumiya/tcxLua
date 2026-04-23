@@ -151,7 +151,9 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     vec4_type["xy"] = &Vec4::xy;
 
     sol::usertype<Quaternion> quat_type = lua->new_usertype<Quaternion>("Quaternion",
-        sol::constructors<Quaternion(), Quaternion(float, float, float, float), Quaternion(const Quaternion&)>()
+        sol::constructors<Quaternion(), Quaternion(float, float, float, float), Quaternion(const Quaternion&)>(),
+        sol::meta_function::multiplication,
+        [](const Quaternion& a, const Quaternion& b){ return a * b; }
     );
     quat_type["w"] = &Quaternion::w;
     quat_type["x"] = &Quaternion::x;
