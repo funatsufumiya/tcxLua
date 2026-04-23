@@ -111,6 +111,36 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     vec3_type["reflected"] = &Vec3::reflected;
     vec3_type["xy"] = &Vec3::xy;
 
+    sol::usertype<Vec4> vec4_type = lua->new_usertype<Vec4>("Vec4",
+        sol::constructors<Vec4(), Vec4(float, float, float, float), Vec4(const Vec3&), Vec4(const Vec4&)>(),
+        sol::meta_function::addition,
+        sol::overload(
+           [](const Vec4& a, const Vec4& b){ return a + b; },
+           [](const Vec4& a, float b){ return a + b; }
+        ),
+        sol::meta_function::subtraction,
+        sol::overload(
+           [](const Vec4& a, const Vec4& b){ return a - b; },
+           [](const Vec4& a, float b){ return a - b; }
+        ),
+        sol::meta_function::multiplication,
+        [](const Vec4& a, float b){ return a * b; },
+        sol::meta_function::division,
+        [](const Vec4& a, float b){ return a / b; }
+    );
+    vec4_type["x"] = &Vec4::x;
+    vec4_type["y"] = &Vec4::y;
+    vec4_type["z"] = &Vec4::z;
+    vec4_type["w"] = &Vec4::w;
+
+    vec4_type["length"] = &Vec4::length;
+    vec4_type["lengthSquared"] = &Vec4::lengthSquared;
+    vec4_type["normalized"] = &Vec4::normalized;
+    vec4_type["normalize"] = &Vec4::normalize;
+    vec4_type["dot"] = &Vec4::dot;
+    vec4_type["lerp"] = &Vec4::lerp;
+    vec4_type["xy"] = &Vec4::xy;
+
     sol::usertype<Quaternion> quat_type = lua->new_usertype<Quaternion>("Quaternion",
         sol::constructors<Quaternion(), Quaternion(float, float, float, float), Quaternion(const Quaternion&)>()
     );
