@@ -566,6 +566,82 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     easycam_t["mouseReleased"] = &EasyCam::mouseReleased;
     easycam_t["mouseDragged"] = &EasyCam::mouseDragged;
     easycam_t["mouseScrolled"] = &EasyCam::mouseScrolled;
+
+    sol::usertype<Light> light_t = lua->new_usertype<Light>("Light",
+        sol::constructors<Light()>()
+    );
+    light_t["setDirectional"] = sol::overload(
+        [](Light& m, float x, float y, float z){ return m.setDirectional(x, y, z); },
+        [](Light& m, const Vec3& v){ return m.setDirectional(v); }
+    );
+    light_t["setPoint"] = sol::overload(
+        [](Light& m, float x, float y, float z){ return m.setPoint(x, y, z); },
+        [](Light& m, const Vec3& v){ return m.setPoint(v); }
+    );
+    light_t["setSpot"] = sol::overload(
+        [](Light& m, const Vec3& p, const Vec3& d){ return m.setSpot(p, d); },
+        [](Light& m, const Vec3& p, const Vec3& d, float i){ return m.setSpot(p, d, i); },
+        [](Light& m, const Vec3& p, const Vec3& d, float i, float o){ return m.setSpot(p, d, i, o); },
+        [](Light& m, float a, float b, float c, float d, float e, float f){ return m.setSpot(a,b,c,d,e,f); },
+        [](Light& m, float a, float b, float c, float d, float e, float f, float i){ return m.setSpot(a,b,c,d,e,f, i); },
+        [](Light& m, float a, float b, float c, float d, float e, float f, float i, float o){ return m.setSpot(a,b,c,d,e,f, i,o); }
+    );
+    light_t["getSpotInnerCos"] = &Light::getSpotInnerCos;
+    light_t["getSpotOuterCos"] = &Light::getSpotOuterCos;
+    light_t["setProjectionTexture"] = &Light::setProjectionTexture;
+    light_t["getProjectionTexture"] = &Light::getProjectionTexture;
+    light_t["hasProjectionTexture"] = &Light::hasProjectionTexture;
+    light_t["setLensShift"] = &Light::setLensShift;
+    light_t["getLensShiftX"] = &Light::getLensShiftX;
+    light_t["getLensShiftY"] = &Light::getLensShiftY;
+    light_t["setProjectorAspect"] = &Light::setProjectorAspect;
+    light_t["getProjectorAspect"] = &Light::getProjectorAspect;
+    light_t["computeProjectorViewProj"] = sol::overload(
+        [](Light& m){ return m.computeProjectorViewProj(); },
+        [](Light& m, float a){ return m.computeProjectorViewProj(a); },
+        [](Light& m, float a, float b){ return m.computeProjectorViewProj(a, b); }
+    );
+    light_t["setIesProfile"] = &Light::setIesProfile;
+    light_t["getIesProfile"] = &Light::getIesProfile;
+    light_t["hasIesProfile"] = &Light::hasIesProfile;
+    light_t["enableShadow"] = &Light::enableShadow;
+    light_t["disableShadow"] = &Light::disableShadow;
+    light_t["isShadowEnabled"] = &Light::isShadowEnabled;
+    light_t["getShadowResolution"] = &Light::getShadowResolution;
+    light_t["setShadowBias"] = &Light::setShadowBias;
+    light_t["getShadowBias"] = &Light::getShadowBias;
+    light_t["getType"] = &Light::getType;
+    light_t["getDirection"] = &Light::getDirection;
+    light_t["getPosition"] = &Light::getPosition;
+    light_t["setAmbient"] = sol::overload(
+        [](Light& m, const Color& c){ return m.setAmbient(c); },
+        [](Light& m, float a, float b, float c){ return m.setAmbient(a,b,c); },
+        [](Light& m, float a, float b, float c, float d){ return m.setAmbient(a,b,c,d); }
+    );
+    light_t["setDiffuse"] = sol::overload(
+        [](Light& m, const Color& c){ return m.setDiffuse(c); },
+        [](Light& m, float a, float b, float c){ return m.setDiffuse(a,b,c); },
+        [](Light& m, float a, float b, float c, float d){ return m.setDiffuse(a,b,c,d); }
+    );
+    light_t["setSpecular"] = sol::overload(
+        [](Light& m, const Color& c){ return m.setSpecular(c); },
+        [](Light& m, float a, float b, float c){ return m.setSpecular(a,b,c); },
+        [](Light& m, float a, float b, float c, float d){ return m.setSpecular(a,b,c,d); }
+    );
+    light_t["getAmbient"] = &Light::getAmbient;
+    light_t["getDiffuse"] = &Light::getDiffuse;
+    light_t["getSpecular"] = &Light::getSpecular;
+    light_t["getIntensity"] = &Light::getIntensity;
+    light_t["setIntensity"] = &Light::setIntensity;
+
+    light_t["setAttenuation"] = &Light::setAttenuation;
+    light_t["getConstantAttenuation"] = &Light::getConstantAttenuation;
+    light_t["getLinearAttenuation"] = &Light::getLinearAttenuation;
+    light_t["getQuadraticAttenuation"] = &Light::getQuadraticAttenuation;
+    light_t["enable"] = &Light::enable;
+    light_t["disable"] = &Light::disable;
+    light_t["isEnabled"] = &Light::isEnabled;
+    light_t["calculate"] = &Light::calculate;
 }
 
 struct Colors{};
