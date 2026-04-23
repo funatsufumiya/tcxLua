@@ -23,7 +23,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("fract", [](float value){ return trussc::fract(value); });
     // tcMath.h, LINE 1009
     lua->set_function("sq", [](float value){ return trussc::sq(value); });
-    // overloads: 3
     // tcMath.h, LINE 1012
     // tcMath.h, LINE 1026
     // tcMath.h, LINE 1030
@@ -32,7 +31,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](const Vec2 & a, const Vec2 & b){ return trussc::dist(a, b); },
         [](const Vec3 & a, const Vec3 & b){ return trussc::dist(a, b); }
     ));
-    // overloads: 3
     // tcMath.h, LINE 1019
     // tcMath.h, LINE 1027
     // tcMath.h, LINE 1031
@@ -49,7 +47,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("angleDifferenceDeg", [](float deg1, float deg2){ return trussc::angleDifferenceDeg(deg1, deg2); });
     // tcMath.h, LINE 1073
     lua->set_function("getRandomEngine", [](){ return trussc::internal::getRandomEngine(); });
-    // overloads: 3
     // tcMath.h, LINE 1080
     // tcMath.h, LINE 1086
     // tcMath.h, LINE 1092
@@ -58,7 +55,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](float max){ return trussc::random(max); },
         [](float min, float max){ return trussc::random(min, max); }
     ));
-    // overloads: 2
     // tcMath.h, LINE 1098
     // tcMath.h, LINE 1104
     lua->set_function("randomInt", sol::overload(
@@ -75,7 +71,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("getFramebufferHeight", [](){ return trussc::getFramebufferHeight(); });
     // TrussC.h, LINE 357
     lua->set_function("beginFrame", [](){  trussc::beginFrame(); });
-    // overloads: 4
     // TrussC.h, LINE 373
     // TrussC.h, LINE 376
     // TrussC.h, LINE 381
@@ -98,7 +93,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("suspendSwapchainPass", [](){  trussc::suspendSwapchainPass(); });
     // TrussC.h, LINE 410
     lua->set_function("resumeSwapchainPass", [](){  trussc::resumeSwapchainPass(); });
-    // overloads: 3
     // TrussC.h, LINE 417
     // TrussC.h, LINE 422
     // TrussC.h, LINE 427
@@ -131,7 +125,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("setStrokeJoin", [](StrokeJoin join){  trussc::setStrokeJoin(join); });
     // TrussC.h, LINE 482
     lua->set_function("getStrokeJoin", [](){ return trussc::getStrokeJoin(); });
-    // overloads: 2
     // TrussC.h, LINE 505
     // TrussC.h, LINE 511
     lua->set_function("setScissor", sol::overload(
@@ -154,7 +147,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("popStyle", [](){  trussc::popStyle(); });
     // TrussC.h, LINE 582
     lua->set_function("resetStyle", [](){  trussc::resetStyle(); });
-    // overloads: 3
     // TrussC.h, LINE 587
     // TrussC.h, LINE 591
     // TrussC.h, LINE 595
@@ -163,7 +155,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](float x, float y, float z){  trussc::translate(x, y, z); },
         [](float x, float y){  trussc::translate(x, y); }
     ));
-    // overloads: 4
     // TrussC.h, LINE 600
     // TrussC.h, LINE 637
     // TrussC.h, LINE 643
@@ -180,7 +171,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("rotateY", [](float radians){  trussc::rotateY(radians); });
     // TrussC.h, LINE 615
     lua->set_function("rotateZ", [](float radians){  trussc::rotateZ(radians); });
-    // overloads: 3
     // TrussC.h, LINE 620
     // TrussC.h, LINE 652
     // TrussC.h, LINE 658
@@ -195,7 +185,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("rotateYDeg", [](float degrees){  trussc::rotateYDeg(degrees); });
     // TrussC.h, LINE 632
     lua->set_function("rotateZDeg", [](float degrees){  trussc::rotateZDeg(degrees); });
-    // overloads: 3
     // TrussC.h, LINE 663
     // TrussC.h, LINE 668
     // TrussC.h, LINE 673
@@ -246,7 +235,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("screenToWorld", [](const Vec2 & screenPos, float worldZ){ return trussc::screenToWorld(screenPos, worldZ); });
     // TrussC.h, LINE 984
     lua->set_function("disable3D", [](){  trussc::disable3D(); });
-    // overloads: 3
     // TrussC.h, LINE 993
     // TrussC.h, LINE 997
     // TrussC.h, LINE 1001
@@ -255,28 +243,24 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](Vec3 pos, float w, float h){  trussc::drawRect(pos, w, h); },
         [](float x, float y, float w, float h){  trussc::drawRect(x, y, w, h); }
     ));
-    // overloads: 2
     // TrussC.h, LINE 1006
     // TrussC.h, LINE 1010
     lua->set_function("drawRectRounded", sol::overload(
         [](Vec3 pos, Vec2 size, float radius){  trussc::drawRectRounded(pos, size, radius); },
         [](float x, float y, float w, float h, float radius){  trussc::drawRectRounded(x, y, w, h, radius); }
     ));
-    // overloads: 2
     // TrussC.h, LINE 1015
     // TrussC.h, LINE 1019
     lua->set_function("drawRectSquircle", sol::overload(
         [](Vec3 pos, Vec2 size, float radius){  trussc::drawRectSquircle(pos, size, radius); },
         [](float x, float y, float w, float h, float radius){  trussc::drawRectSquircle(x, y, w, h, radius); }
     ));
-    // overloads: 2
     // TrussC.h, LINE 1024
     // TrussC.h, LINE 1028
     lua->set_function("drawCircle", sol::overload(
         [](Vec3 center, float radius){  trussc::drawCircle(center, radius); },
         [](float cx, float cy, float radius){  trussc::drawCircle(cx, cy, radius); }
     ));
-    // overloads: 3
     // TrussC.h, LINE 1033
     // TrussC.h, LINE 1037
     // TrussC.h, LINE 1041
@@ -285,7 +269,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](Vec3 center, float rx, float ry){  trussc::drawEllipse(center, rx, ry); },
         [](float cx, float cy, float rx, float ry){  trussc::drawEllipse(cx, cy, rx, ry); }
     ));
-    // overloads: 3
     // TrussC.h, LINE 1046
     // TrussC.h, LINE 1050
     // TrussC.h, LINE 1054
@@ -294,14 +277,12 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](float x1, float y1, float x2, float y2){  trussc::drawLine(x1, y1, x2, y2); },
         [](float x1, float y1, float z1, float x2, float y2, float z2){  trussc::drawLine(x1, y1, z1, x2, y2, z2); }
     ));
-    // overloads: 2
     // TrussC.h, LINE 1059
     // TrussC.h, LINE 1063
     lua->set_function("drawTriangle", sol::overload(
         [](Vec3 p1, Vec3 p2, Vec3 p3){  trussc::drawTriangle(p1, p2, p3); },
         [](float x1, float y1, float x2, float y2, float x3, float y3){  trussc::drawTriangle(x1, y1, x2, y2, x3, y3); }
     ));
-    // overloads: 2
     // TrussC.h, LINE 1068
     // TrussC.h, LINE 1072
     lua->set_function("drawPoint", sol::overload(
@@ -316,7 +297,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("isFillEnabled", [](){ return trussc::isFillEnabled(); });
     // TrussC.h, LINE 1090
     lua->set_function("isStrokeEnabled", [](){ return trussc::isStrokeEnabled(); });
-    // overloads: 6
     // TrussC.h, LINE 1124
     // TrussC.h, LINE 1128
     // TrussC.h, LINE 1133
@@ -361,7 +341,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("setCursor", [](Cursor cursor){  trussc::setCursor(cursor); });
     // TrussC.h, LINE 1358
     lua->set_function("getCursor", [](){ return trussc::getCursor(); });
-    // overloads: 2
     // TrussC.h, LINE 1364
     // TrussC.h, LINE 2518
     lua->set_function("bindCursorImage", sol::overload(
@@ -466,7 +445,24 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("registerInspectionTools", [](){  trussc::mcp::registerInspectionTools(); });
     // TrussC.h, LINE 1913
     lua->set_function("registerDebuggerTools", [](){  trussc::mcp::registerDebuggerTools(); });
-    // overloads: 6
+    // tcPrimitives.h, LINE 11
+    lua->set_function("createPlane", [](float width, float height, int cols, int rows){ return trussc::createPlane(width, height, cols, rows); });
+    // tcPrimitives.h, LINE 47
+    // tcPrimitives.h, LINE 102
+    lua->set_function("createBox", sol::overload(
+        [](float width, float height, float depth){ return trussc::createBox(width, height, depth); },
+        [](float size){ return trussc::createBox(size); }
+    ));
+    // tcPrimitives.h, LINE 109
+    lua->set_function("createSphere", [](float radius, int resolution){ return trussc::createSphere(radius, resolution); });
+    // tcPrimitives.h, LINE 168
+    lua->set_function("createCylinder", [](float radius, float height, int resolution){ return trussc::createCylinder(radius, height, resolution); });
+    // tcPrimitives.h, LINE 255
+    lua->set_function("createCone", [](float radius, float height, int resolution){ return trussc::createCone(radius, height, resolution); });
+    // tcPrimitives.h, LINE 327
+    lua->set_function("createIcoSphere", [](float radius, int subdivisions){ return trussc::createIcoSphere(radius, subdivisions); });
+    // tcPrimitives.h, LINE 430
+    lua->set_function("createTorus", [](float radius, float tubeRadius, int sides, int rings){ return trussc::createTorus(radius, tubeRadius, sides, rings); });
     // TrussC.h, LINE 2562
     // TrussC.h, LINE 2571
     // TrussC.h, LINE 2575
@@ -481,7 +477,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](Vec3 pos, float size){  trussc::drawBox(pos, size); },
         [](float x, float y, float z, float size){  trussc::drawBox(x, y, z, size); }
     ));
-    // overloads: 3
     // TrussC.h, LINE 2594
     // TrussC.h, LINE 2603
     // TrussC.h, LINE 2610
@@ -490,7 +485,6 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](Vec3 pos, float radius, int resolution){  trussc::drawSphere(pos, radius, resolution); },
         [](float x, float y, float z, float radius, int resolution){  trussc::drawSphere(x, y, z, radius, resolution); }
     ));
-    // overloads: 3
     // TrussC.h, LINE 2614
     // TrussC.h, LINE 2623
     // TrussC.h, LINE 2630

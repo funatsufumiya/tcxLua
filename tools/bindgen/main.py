@@ -24,7 +24,8 @@ after = """
 
 target_filenames = [
     "TrussC.h",
-    "tcMath.h"
+    "tcMath.h",
+    "tcPrimitives.h"
 ]
 
 ignore_functions = {
@@ -39,6 +40,9 @@ ignore_functions = {
         "trussc#getBitmapStringBounds"
     ],
     "tcMath.h" : [
+        "trussc#operator*"
+    ],
+    "tcPrimitives.h" : [
         "trussc#operator*"
     ]
 }
@@ -190,7 +194,7 @@ def bindFunctions(outfile, fn_map):
                     outfile.write(f"    lua->set_function(\"{name}\", []({sarg}){lp} {ret} {id}({narg}); {rp});\n")
         else:
 
-            outfile.write(f"    // overloads: {overloads_count}\n")
+            # outfile.write(f"    // overloads: {overloads_count}\n")
 
             overloads = []
             fn_name = ""
