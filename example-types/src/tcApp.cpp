@@ -4,9 +4,22 @@ void tcApp::setup() {
     lua = tcx_lua.getLuaState();
 
     std::string setupLuaSource = R"LUA(
+        function strq(q)
+            return "Quaternion(".. q.w .. ", ".. q.x .. ", ".. q.y .. ", ".. q.z .. ")"
+        end
+
         local v = Vec2.new(1.0, 2.0)
         print("v.x = " .. v.x)
         print("v.y = " .. v.y)
+
+        local quat = Quaternion.new(1.0, 2.0, 3.0, 4.0)
+        print("quat = " .. strq(quat))
+
+        local quat_ident = Quaternion.identity()
+        print("quat_ident = " .. strq(quat_ident))
+
+        local quat_from_euler = Quaternion.fromEuler(1.0, 2.0, 3.0)
+        print("quat_from_euler = " .. strq(quat_from_euler))
     )LUA";
 
     sol::optional<sol::error> result = lua->safe_script(setupLuaSource);
