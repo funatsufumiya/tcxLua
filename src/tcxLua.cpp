@@ -352,6 +352,20 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     );
     fbo_type["clearColor"] = &Fbo::clearColor;
     fbo_type["end"] = &Fbo::end;
+    fbo_type["readPixels"] = &Fbo::readPixels;
+    fbo_type["readPixelsFloat"] = &Fbo::readPixelsFloat;
+    fbo_type["copyTo"] = &Fbo::copyTo;
+    fbo_type["getWidth"] = &Fbo::getWidth;
+    fbo_type["getHeight"] = &Fbo::getHeight;
+    fbo_type["getSampleCount"] = &Fbo::getSampleCount;
+    fbo_type["getTextureFormat"] = &Fbo::getTextureFormat;
+    fbo_type["isAllocated"] = &Fbo::isAllocated;
+    fbo_type["isActive"] = &Fbo::isActive;
+    fbo_type["getTexture"] = [](Fbo& f) -> Texture& { return f.getTexture(); };
+    fbo_type["save"] = &Fbo::save;
+    fbo_type["getColorImage"] = &Fbo::getColorImage;
+    fbo_type["getTextureView"] = &Fbo::getTextureView;
+    fbo_type["getSampler"] = &Fbo::getSampler;
 }
 
 struct Colors{};
