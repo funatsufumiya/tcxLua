@@ -20,8 +20,17 @@ std::shared_ptr<sol::state> tcxLua::getLuaState(){
 void tcxLua::setBindings(const std::shared_ptr<sol::state>& lua){
     setTrussCGeneratedBindings(lua);
     setTypeBindings(lua);
+    setConstBindings(lua);
 
     lua->set_function("getElapsedTimef", &trussc::getElapsedTimef);
+}
+
+void tcxLua::setConstBindings(const std::shared_ptr<sol::state>& lua){
+    auto&& l = *lua;
+    l["TAU"] = TAU;
+    l["PI"] = PI;
+    l["HALF_TAU"] = HALF_TAU;
+    l["QUARTER_TAU"] = QUARTER_TAU;
 }
 
 void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
