@@ -17,7 +17,7 @@
 - colors (constants)
 - TAU, PI
 - Fbo
-- Texture
+- Texture, Image
 - Mesh
 
 ## Development

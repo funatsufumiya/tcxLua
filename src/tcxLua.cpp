@@ -431,6 +431,29 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     tex_type["getView"] = &Texture::getView;
     tex_type["getSampler"] = &Texture::getSampler;
     tex_type["getAttachmentView"] = &Texture::getAttachmentView;
+
+    sol::usertype<Image> img_type = lua->new_usertype<Image>("Image",
+        sol::constructors<Image()>() // FIXME: move constructor?
+    );
+    img_type["load"] = &Image::load;
+    img_type["loadFromMemory"] = &Image::loadFromMemory;
+    img_type["save"] = &Image::save;
+    img_type["allocate"] = sol::overload(
+        [](Image& t, int w, int h){ return t.allocate(w, h); },
+        [](Image& t, int w, int h, int c){ return t.allocate(w, h, c); }
+    );
+    img_type["clear"] = &Image::clear;
+    img_type["isAllocated"] = &Image::isAllocated;
+    img_type["getWidth"] = &Image::getWidth;
+    img_type["getHeight"] = &Image::getHeight;
+    img_type["getChannels"] = &Image::getChannels;
+    fbo_type["getPixels"] = [](Image& f) -> Pixels& { return f.getPixels(); };
+    fbo_type["getPixelsData"] = [](Image& f) -> unsigned char* { return f.getPixelsData(); };
+    img_type["getColor"] = &Image::getColor;
+    img_type["setColor"] = &Image::setColor;
+    img_type["update"] = &Image::update;
+    img_type["setDirty"] = &Image::setDirty;
+    fbo_type["getTexture"] = [](Image& f) -> Texture& { return f.getTexture(); };
 }
 
 struct Colors{};
