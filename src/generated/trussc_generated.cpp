@@ -80,7 +80,7 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](){  trussc::clear(); },
         [](float gray, float a){  trussc::clear(gray, a); },
         [](const Color & c){  trussc::clear(c); },
-        // NOTE: additional overrides provided by user,
+        // NOTE: additional overloads provided by user,
         [](float r, float g, float b){  trussc::clear(r, g, b); }
     ));
     // TrussC.h, LINE 391
@@ -102,7 +102,7 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](float r, float g, float b, float a){  trussc::setColor(r, g, b, a); },
         [](float gray, float a){  trussc::setColor(gray, a); },
         [](const Color & c){  trussc::setColor(c); },
-        // NOTE: additional overrides provided by user,
+        // NOTE: additional overloads provided by user,
         [](float r, float g, float b){  trussc::setColor(r, g, b); }
     ));
     // TrussC.h, LINE 432
@@ -110,7 +110,7 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     // TrussC.h, LINE 437
     lua->set_function("setColorHSB", sol::overload(
         [](float h, float s, float b, float a){  trussc::setColorHSB(h, s, b, a); },
-        // NOTE: additional overrides provided by user,
+        // NOTE: additional overloads provided by user,
         [](float h, float s, float b){  trussc::setColorHSB(h, s, b); }
     ));
     // TrussC.h, LINE 442
