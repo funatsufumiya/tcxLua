@@ -189,7 +189,7 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
            [](const Mat4& a, const Vec4& b){ return a * b; }
         )
     );
-    mat4_type["at"] = [](Mat4& m, int raw, int col) -> float { return (float)(m.at(raw, col)); }; // WORKAROUND
+    mat4_type["at"] = [](Mat4& m, int raw, int col) { return m.at(raw, col); };
     mat4_type["set"] = [](Mat4& m, int raw, int col, int v){ m.at(raw, col) = v; }; // WORKAROUND
     mat4_type["identity"] = &Mat4::identity;
     mat4_type["fromHomography"] = &Mat4::fromHomography;

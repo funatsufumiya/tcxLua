@@ -25,6 +25,9 @@ void tcApp::setup() {
         print("v1:angle(v2) = " .. v1:angle(v2))
         print("v1 + v2 = " .. strv2(v1 + v2))
         print("v1 - v2 = " .. strv2(v1 - v2))
+        print("v1.x = 5.0")
+        v1.x = 5.0
+        print("v1 = " .. strv2(v1))
 
         local quat = Quaternion.new(1.0, 2.0, 3.0, 4.0)
         print("quat = " .. strq(quat))
