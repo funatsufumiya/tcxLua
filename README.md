@@ -20,7 +20,9 @@
 - Texture
 - Mesh
 
-## Bindgen
+## Development
+
+### Bindgen
 
 Please read [tools/bindgen/README.md](tools/bindgen/README.md) in detail.
 
