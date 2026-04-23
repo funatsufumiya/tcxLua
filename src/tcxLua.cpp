@@ -334,6 +334,24 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     mesh_type["drawWithLighting"] = &Mesh::drawWithLighting;
     mesh_type["drawNoLightingWithTexture"] = &Mesh::drawNoLightingWithTexture;
     mesh_type["drawWireframe"] = &Mesh::drawWireframe;
+
+    sol::usertype<Fbo> fbo_type = lua->new_usertype<Fbo>("Fbo",
+        sol::constructors<Fbo()>() // TODO: move constructor?
+    );
+
+    fbo_type["allocate"] = sol::overload(
+        [](Fbo& f, int w, int h){ return f.allocate(w, h); },
+        [](Fbo& f, int w, int h, int sampleCount){ return f.allocate(w, h, sampleCount); },
+        [](Fbo& f, int w, int h, int sampleCount, TextureFormat t){ return f.allocate(w, h, sampleCount, t); }
+    );
+    fbo_type["clear"] = &Fbo::clear;
+    fbo_type["begin"] = sol::overload(
+        [](Fbo& f){ return f.begin(); },
+        [](Fbo& f, float r, float g, float b){ return f.begin(r, g, b); },
+        [](Fbo& f, float r, float g, float b, float a){ return f.begin(r, g, b, a); }
+    );
+    fbo_type["clearColor"] = &Fbo::clearColor;
+    fbo_type["end"] = &Fbo::end;
 }
 
 struct Colors{};
