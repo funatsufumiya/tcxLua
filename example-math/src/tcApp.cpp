@@ -4,22 +4,6 @@ void tcApp::setup() {
     lua = tcx_lua.getLuaState();
 
     std::string setupLuaSource = R"LUA(
-        function strq(q)
-            return "Quaternion(".. q.w .. ", ".. q.x .. ", ".. q.y .. ", ".. q.z .. ")"
-        end
-
-        function strv2(v)
-            return "Vec2(".. v.x .. ", ".. v.y .. ")"
-        end
-
-        function strv3(v)
-            return "Vec3(".. v.x .. ", ".. v.y .. ", ".. v.z .. ")"
-        end
-
-        function strc(c)
-            return "Color(".. c.r .. ", ".. c.g .. ", ".. c.b .. ", ".. c.a .. ")"
-        end
-
         print("sin(1) = " .. sin(1))
         print("cos(1) = " .. cos(1))
         print("tan(1) = " .. tan(1))
