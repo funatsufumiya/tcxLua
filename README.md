@@ -15,10 +15,8 @@
 - Color
 - colors (constants)
 - TAU, PI
-- Fbo
-- Texture, Image, Pixels
-- Mesh
-- Shader
+- Mesh, Shader
+- Fbo, Texture, Image, Pixels
 - EasyCam, Light, Material
 
 ## Development
