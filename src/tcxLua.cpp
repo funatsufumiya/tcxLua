@@ -554,6 +554,7 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     easycam_t["getDistance"] = &EasyCam::getDistance;
     easycam_t["setFov"] = &EasyCam::setFov;
     easycam_t["getFov"] = &EasyCam::getFov;
+    easycam_t["getPosition"] = &EasyCam::getPosition;
     easycam_t["setFovDeg"] = &EasyCam::setFovDeg;
     easycam_t["setNearClip"] = &EasyCam::setNearClip;
     easycam_t["setFarClip"] = &EasyCam::setFarClip;
