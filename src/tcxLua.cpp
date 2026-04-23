@@ -500,6 +500,35 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     sol::usertype<PixelFormat> pix_format_type = lua->new_usertype<PixelFormat>("PixelFormat");
     pix_format_type["U8"] = sol::var(PixelFormat::U8);
     pix_format_type["F32"] = sol::var(PixelFormat::F32);
+
+    sol::usertype<Shader> shader_type = lua->new_usertype<Shader>("Shader",
+        sol::constructors<Shader()>() // FIXME: move constructor?
+    );
+    shader_type["load"] = &Shader::load;
+    shader_type["clear"] = &Shader::clear;
+    shader_type["isLoaded"] = &Shader::isLoaded;
+    shader_type["begin"] = &Shader::begin;
+    shader_type["end"] = &Shader::end;
+    shader_type["setUniform"] = sol::overload(
+        [](Shader& f, int s, float v){ return f.setUniform(s, v); },
+        [](Shader& f, int s, const Vec2& v){ return f.setUniform(s, v); },
+        [](Shader& f, int s, const Vec3& v){ return f.setUniform(s, v); },
+        [](Shader& f, int s, const Vec4& v){ return f.setUniform(s, v); },
+        [](Shader& f, int s, const Color& v){ return f.setUniform(s, v); },
+        [](Shader& f, int s, const std::vector<float>& v){ return f.setUniform(s, v); },
+        [](Shader& f, int s, const std::vector<Vec2>& v){ return f.setUniform(s, v); },
+        // [](Shader& f, int s, const std::vector<Vec3>& v){ return f.setUniform(s, v); }, // not exist: https://github.com/TrussC-org/TrussC/issues/51
+        [](Shader& f, int s, const std::vector<Vec4>& v){ return f.setUniform(s, v); },
+        [](Shader& f, int s, const void* data, size_t size){ return f.setUniform(s, data, size); }
+    );
+    shader_type["storeUniform"] = &Shader::storeUniform;
+    shader_type["applyUniforms"] = &Shader::applyUniforms;
+    shader_type["setTexture"] = sol::overload(
+        [](Shader& f, int s, sg_image i, sg_sampler p){ return f.setTexture(s, i, p); },
+        [](Shader& f, int s, sg_view i, sg_sampler p){ return f.setTexture(s, i, p); }
+    );
+    shader_type["submitVertices"] = &Shader::submitVertices;
+    shader_type["executeDeferredDraw"] = &Shader::executeDeferredDraw;
 }
 
 struct Colors{};

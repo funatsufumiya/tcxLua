@@ -18,6 +18,7 @@
 - Fbo
 - Texture, Image, Pixels
 - Mesh
+- Shader
 
 ## Development
 
