@@ -33,7 +33,8 @@ void tcApp::draw() {
         isFirstDraw = false;
     }
 
-    lua->script("draw()");
+    // lua->script("draw()");
+    ((*lua)["draw"])();
 }
 
 void tcApp::keyPressed(int key) {}
