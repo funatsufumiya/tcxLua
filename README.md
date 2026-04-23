@@ -11,7 +11,7 @@
 - trussc (TrussC.h directly defined functions)
 - cmath (common use ones only)
 - tcMath
-- Vec2, Vec3, Vec4, Mat, Quaternion
+- Vec2, Vec3, Vec4, Mat4, Quaternion
 - Color
 - colors (constants)
 - TAU, PI
