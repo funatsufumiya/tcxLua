@@ -9,6 +9,64 @@ using namespace tc;
 
 void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
 
+    // tcMath.h, LINE 987
+    lua->set_function("deg2rad", [](float deg){ return trussc::deg2rad(deg); });
+    // tcMath.h, LINE 990
+    lua->set_function("rad2deg", [](float rad){ return trussc::rad2deg(rad); });
+    // tcMath.h, LINE 993
+    lua->set_function("clamp", [](float value, float min, float max){ return trussc::clamp(value, min, max); });
+    // tcMath.h, LINE 998
+    lua->set_function("remap", [](float value, float inMin, float inMax, float outMin, float outMax){ return trussc::remap(value, inMin, inMax, outMin, outMax); });
+    // tcMath.h, LINE 1003
+    lua->set_function("sign", [](float value){ return trussc::sign(value); });
+    // tcMath.h, LINE 1006
+    lua->set_function("fract", [](float value){ return trussc::fract(value); });
+    // tcMath.h, LINE 1009
+    lua->set_function("sq", [](float value){ return trussc::sq(value); });
+    // overloads: 3
+    // tcMath.h, LINE 1012
+    // tcMath.h, LINE 1026
+    // tcMath.h, LINE 1030
+    lua->set_function("dist", sol::overload(
+        [](float x1, float y1, float x2, float y2){ return trussc::dist(x1, y1, x2, y2); },
+        [](const Vec2 & a, const Vec2 & b){ return trussc::dist(a, b); },
+        [](const Vec3 & a, const Vec3 & b){ return trussc::dist(a, b); }
+    ));
+    // overloads: 3
+    // tcMath.h, LINE 1019
+    // tcMath.h, LINE 1027
+    // tcMath.h, LINE 1031
+    lua->set_function("distSquared", sol::overload(
+        [](float x1, float y1, float x2, float y2){ return trussc::distSquared(x1, y1, x2, y2); },
+        [](const Vec2 & a, const Vec2 & b){ return trussc::distSquared(a, b); },
+        [](const Vec3 & a, const Vec3 & b){ return trussc::distSquared(a, b); }
+    ));
+    // tcMath.h, LINE 1040
+    lua->set_function("wrap", [](float value, float min, float max){ return trussc::wrap(value, min, max); });
+    // tcMath.h, LINE 1051
+    lua->set_function("angleDifference", [](float angle1, float angle2){ return trussc::angleDifference(angle1, angle2); });
+    // tcMath.h, LINE 1060
+    lua->set_function("angleDifferenceDeg", [](float deg1, float deg2){ return trussc::angleDifferenceDeg(deg1, deg2); });
+    // tcMath.h, LINE 1073
+    lua->set_function("getRandomEngine", [](){ return trussc::internal::getRandomEngine(); });
+    // overloads: 3
+    // tcMath.h, LINE 1080
+    // tcMath.h, LINE 1086
+    // tcMath.h, LINE 1092
+    lua->set_function("random", sol::overload(
+        [](){ return trussc::random(); },
+        [](float max){ return trussc::random(max); },
+        [](float min, float max){ return trussc::random(min, max); }
+    ));
+    // overloads: 2
+    // tcMath.h, LINE 1098
+    // tcMath.h, LINE 1104
+    lua->set_function("randomInt", sol::overload(
+        [](int max){ return trussc::randomInt(max); },
+        [](int min, int max){ return trussc::randomInt(min, max); }
+    ));
+    // tcMath.h, LINE 1110
+    lua->set_function("randomSeed", [](unsigned int seed){  trussc::randomSeed(seed); });
     // TrussC.h, LINE 337
     lua->set_function("getDpiScale", [](){ return trussc::getDpiScale(); });
     // TrussC.h, LINE 342

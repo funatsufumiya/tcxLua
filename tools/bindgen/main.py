@@ -23,7 +23,8 @@ after = """
 """
 
 target_filenames = [
-    "TrussC.h"
+    "TrussC.h",
+    "tcMath.h"
 ]
 
 ignore_functions = {
@@ -36,6 +37,9 @@ ignore_functions = {
         # makes errors on binding (reference problem etc):
         "trussc#intersectRect",
         "trussc#getBitmapStringBounds"
+    ],
+    "tcMath.h" : [
+        "trussc#operator*"
     ]
 }
 
@@ -89,6 +93,7 @@ def visitNode(node, ns="", clazz=""):
         id = clazz_id + "#" + function_name
 
         if filename in ignore_functions:
+            # print(filename + f" / {id}")
             if id in ignore_functions[filename]:
                 is_ignore = True
 
