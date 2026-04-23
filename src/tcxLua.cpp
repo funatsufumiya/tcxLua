@@ -250,6 +250,90 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     color_type["lerpOKLab"] = &Color::lerpOKLab;
     color_type["lerpOKLCH"] = &Color::lerpOKLCH;
     color_type["lerp"] = &Color::lerp;
+
+    sol::usertype<Mesh> mesh_type = lua->new_usertype<Mesh>("Mesh",
+        sol::constructors<Mesh(), Mesh(const Mesh&), Mesh(Mesh&&)>()
+    );
+
+    mesh_type["setMode"] = &Mesh::setMode;
+    mesh_type["getMode"] = &Mesh::getMode;
+    mesh_type["addVertex"] = sol::overload(
+        [](Mesh& m, float x, float y){ return m.addVertex(x, y); },
+        [](Mesh& m, float x, float y, float z){ return m.addVertex(x, y, z); },
+        [](Mesh& m, const Vec2& v){ return m.addVertex(v); },
+        [](Mesh& m, const Vec3& v){ return m.addVertex(v); }
+    );
+    mesh_type["addVertices"] = &Mesh::addVertices;
+    mesh_type["getVertices"] = [](Mesh& m){ return m.getVertices(); };
+    mesh_type["getNumVertices"] = &Mesh::getNumVertices;
+    mesh_type["addColor"] = sol::overload(
+        [](Mesh& m, float x, float y, float z){ return m.addColor(x, y, z); },
+        [](Mesh& m, float x, float y, float z, float w){ return m.addColor(x, y, z, w); },
+        [](Mesh& m, const Color& v){ return m.addColor(v); }
+    );
+    mesh_type["addColors"] = &Mesh::addColors;
+    mesh_type["getColors"] = [](Mesh& m){ return m.getColors(); };
+    mesh_type["getNumColors"] = &Mesh::getNumColors;
+    mesh_type["hasColors"] = &Mesh::hasColors;
+    mesh_type["addIndex"] = &Mesh::addIndex;
+    mesh_type["addIndices"] = &Mesh::addIndices;
+    mesh_type["addTriangle"] = &Mesh::addTriangle;
+    mesh_type["getIndices"] = [](Mesh& m){ return m.getIndices(); };
+    mesh_type["hasIndices"] = &Mesh::hasIndices;
+    mesh_type["addNormal"] = sol::overload(
+        [](Mesh& m, float x, float y, float z){ return m.addNormal(x, y, z); },
+        [](Mesh& m, const Vec3& v){ return m.addNormal(v); }
+    );
+    mesh_type["addNormals"] = &Mesh::addNormals;
+    mesh_type["setNormal"] = &Mesh::setNormal;
+    mesh_type["getNormal"] = &Mesh::getNormal;
+    mesh_type["getNormals"] = [](Mesh& m){ return m.getNormals(); };
+    mesh_type["getNumNormals"] = &Mesh::getNumNormals;
+    mesh_type["hasNormals"] = &Mesh::hasNormals;
+    mesh_type["addTexCoord"] = sol::overload(
+        [](Mesh& m, float x, float y){ return m.addTexCoord(x, y); },
+        [](Mesh& m, const Vec2& v){ return m.addTexCoord(v); }
+    );
+    mesh_type["getTexCoords"] = [](Mesh& m){ return m.getTexCoords(); };
+    mesh_type["hasTexCoords"] = &Mesh::hasTexCoords;
+    mesh_type["hasValidTexCoords"] = &Mesh::hasValidTexCoords;
+    mesh_type["addTangent"] = sol::overload(
+        [](Mesh& m, float x, float y, float z){ return m.addTangent(x, y, z); },
+        [](Mesh& m, float x, float y, float z, float w){ return m.addTangent(x, y, z, w); },
+        [](Mesh& m, const Vec4& v){ return m.addTangent(v); }
+    );
+    mesh_type["getTangents"] = [](Mesh& m){ return m.getTangents(); };
+    mesh_type["getNumTangents"] = &Mesh::getNumTangents;
+    mesh_type["hasTangents"] = &Mesh::hasTangents;
+    mesh_type["clear"] = &Mesh::clear;
+    mesh_type["clearVertices"] = &Mesh::clearVertices;
+    mesh_type["clearNormals"] = &Mesh::clearNormals;
+    mesh_type["clearColors"] = &Mesh::clearColors;
+    mesh_type["clearIndices"] = &Mesh::clearIndices;
+    mesh_type["clearTexCoords"] = &Mesh::clearTexCoords;
+    mesh_type["clearTangents"] = &Mesh::clearTangents;
+    mesh_type["translate"] = sol::overload(
+        [](Mesh& m, float x, float y, float z){ return m.translate(x, y, z); },
+        [](Mesh& m, const Vec3& v){ return m.translate(v); }
+    );
+    mesh_type["rotateX"] = &Mesh::rotateX;
+    mesh_type["rotateY"] = &Mesh::rotateY;
+    mesh_type["rotateZ"] = &Mesh::rotateZ;
+    mesh_type["scale"] = sol::overload(
+        [](Mesh& m, float x, float y, float z){ return m.scale(x, y, z); },
+        [](Mesh& m, float s){ return m.scale(s); }
+    );
+    mesh_type["transform"] = &Mesh::transform;
+    mesh_type["append"] = &Mesh::append;
+    mesh_type["draw"] = sol::overload(
+        [](Mesh& m){ return m.draw(); },
+        [](Mesh& m, const Image& image){ return m.draw(image); },
+        [](Mesh& m, const Texture& tex){ return m.draw(tex); }
+    );
+    mesh_type["drawNoLighting"] = &Mesh::drawNoLighting;
+    mesh_type["drawWithLighting"] = &Mesh::drawWithLighting;
+    mesh_type["drawNoLightingWithTexture"] = &Mesh::drawNoLightingWithTexture;
+    mesh_type["drawWireframe"] = &Mesh::drawWireframe;
 }
 
 struct Colors{};
