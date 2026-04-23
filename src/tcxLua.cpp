@@ -432,6 +432,17 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     tex_type["getSampler"] = &Texture::getSampler;
     tex_type["getAttachmentView"] = &Texture::getAttachmentView;
 
+    sol::usertype<TextureFormat> tex_format_type = lua->new_usertype<TextureFormat>("TextureFormat");
+    tex_format_type["RGBA8"] = sol::var(TextureFormat::RGBA8);
+    tex_format_type["RGBA16F"] = sol::var(TextureFormat::RGBA16F);
+    tex_format_type["RGBA32F"] = sol::var(TextureFormat::RGBA32F);
+    tex_format_type["R8"] = sol::var(TextureFormat::R8);
+    tex_format_type["R16F"] = sol::var(TextureFormat::R16F);
+    tex_format_type["R32F"] = sol::var(TextureFormat::R32F);
+    tex_format_type["RG8"] = sol::var(TextureFormat::RG8);
+    tex_format_type["RG16F"] = sol::var(TextureFormat::RG16F);
+    tex_format_type["RG32F"] = sol::var(TextureFormat::RG16F);
+
     sol::usertype<Image> img_type = lua->new_usertype<Image>("Image",
         sol::constructors<Image()>() // FIXME: move constructor?
     );
