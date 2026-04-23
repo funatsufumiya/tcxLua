@@ -86,6 +86,14 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         [](const Vec3& euler){ return Quaternion::fromEuler(euler); }
     );
     quat_type["toEuler"] = &Quaternion::toEuler;
+    quat_type["toMatrix"] = &Quaternion::toMatrix;
+    quat_type["length"] = &Quaternion::length;
+    quat_type["lengthSquared"] = &Quaternion::lengthSquared;
+    quat_type["normalized"] = &Quaternion::normalized;
+    quat_type["normalize"] = &Quaternion::normalize;
+    quat_type["conjugate"] = &Quaternion::conjugate;
+    quat_type["rotate"] = &Quaternion::rotate;
+    quat_type["slerp"] = &Quaternion::slerp;
 }
 
 // } // namespace tcx::lua
