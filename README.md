@@ -12,8 +12,7 @@
 - cmath (common use ones only)
 - tcMath
 - Vec2, Vec3, Vec4, Mat4, Quaternion
-- Color
-- colors (constants)
+- Color, colors (constants)
 - TAU, PI
 - Mesh, Shader
 - Fbo, Texture, Image, Pixels
