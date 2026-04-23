@@ -22,6 +22,7 @@ void tcxLua::setBindings(const std::shared_ptr<sol::state>& lua){
     setTypeBindings(lua);
     setConstBindings(lua);
     setColorConstBindings(lua);
+    setMathBindings(lua);
 
     lua->set_function("getElapsedTimef", &trussc::getElapsedTimef);
 }
@@ -398,6 +399,40 @@ void tcxLua::setColorConstBindings(const std::shared_ptr<sol::state>& lua){
     colors_type["slateGray"] = sol::var(colors::slateGray);
     colors_type["lightSlateGray"] = sol::var(colors::lightSlateGray);
     colors_type["darkSlateGray"] = sol::var(colors::darkSlateGray);
+}
+
+void tcxLua::setMathBindings(const std::shared_ptr<sol::state>& lua){
+    auto&& l = *lua;
+    lua->set_function("sin", [](float v){ return sin(v); });
+    lua->set_function("cos", [](float v){ return cos(v); });
+    lua->set_function("tan", [](float v){ return tan(v); });
+    lua->set_function("atan", [](float v){ return atan(v); });
+    lua->set_function("atan2", [](float a, float b){ return atan2(a, b); });
+    lua->set_function("atanh", [](float v){ return atanh(v); });
+    lua->set_function("sqrt", [](float v){ return sqrt(v); });
+    lua->set_function("tanh", [](float v){ return tanh(v); });
+    lua->set_function("acos", [](float v){ return acos(v); });
+    lua->set_function("asin", [](float v){ return asin(v); });
+
+    lua->set_function("exp", [](float v){ return exp(v); });
+    lua->set_function("exp2", [](float v){ return exp2(v); });
+    lua->set_function("abs", [](float v){ return fabs(v); });
+
+    lua->set_function("log", [](float v){ return log(v); });
+    lua->set_function("log2", [](float v){ return log2(v); });
+    lua->set_function("log10", [](float v){ return log10(v); });
+
+    lua->set_function("ceil", [](float v){ return ceil(v); });
+    lua->set_function("floor", [](float v){ return floor(v); });
+    lua->set_function("round", [](float v){ return round(v); });
+    lua->set_function("trunc", [](float v){ return trunc(v); });
+
+    lua->set_function("pow", [](float a, float b){ return pow(a, b); });
+    lua->set_function("remainder", [](float a, float b){ return remainder(a, b); });
+
+    lua->set_function("fmod", [](float a, float b){ return fmod(a, b); });
+    lua->set_function("max", [](float a, float b){ return std::max(a, b); });
+    lua->set_function("min", [](float a, float b){ return std::min(a, b); });
 }
 
 // } // namespace tcx::lua

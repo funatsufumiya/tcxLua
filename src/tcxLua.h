@@ -14,6 +14,7 @@ protected:
     void setTypeBindings(const std::shared_ptr<sol::state>& lua);
     void setConstBindings(const std::shared_ptr<sol::state>& lua);
     void setColorConstBindings(const std::shared_ptr<sol::state>& lua);
+    void setMathBindings(const std::shared_ptr<sol::state>& lua);
 };
 
 // } // namespace tcx::lua
