@@ -94,6 +94,15 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     quat_type["conjugate"] = &Quaternion::conjugate;
     quat_type["rotate"] = &Quaternion::rotate;
     quat_type["slerp"] = &Quaternion::slerp;
+
+    sol::usertype<Mat4> mat4_type = lua->new_usertype<Mat4>("Mat4",
+        sol::constructors<Mat4(),
+            Mat4(float m00, float m01, float m02, float m03,
+                 float m10, float m11, float m12, float m13,
+                 float m20, float m21, float m22, float m23,
+                 float m30, float m31, float m32, float m33),
+            Mat4(const Mat4&)>()
+    );
 }
 
 // } // namespace tcx::lua
