@@ -736,6 +736,14 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
             [](Xml& x, const std::string& a, const std::string& b){ return x.addDeclaration(a, b); }
         )
     );
+
+    sol::usertype<LogLevel> loglevel_t = lua->new_usertype<LogLevel>("LogLevel");
+    loglevel_t["Verbose"] = sol::var(LogLevel::Verbose);
+    loglevel_t["Notice"] = sol::var(LogLevel::Notice);
+    loglevel_t["Warning"] = sol::var(LogLevel::Warning);
+    loglevel_t["Error"] = sol::var(LogLevel::Error);
+    loglevel_t["Fatal"] = sol::var(LogLevel::Fatal);
+    loglevel_t["Silent"] = sol::var(LogLevel::Silent);
 }
 
 struct Colors{};
