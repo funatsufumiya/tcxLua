@@ -19,7 +19,7 @@
 
 ## Known Issues
 
-- Default value is not treated perfectly now ([Issue#1](https://github.com/funatsufumiya/tcxLua/issues/1)). So you need for example:
+- Default value is not treated perfectly now ([Issue#1](https://github.com/funatsufumiya/tcxLua/issues/1)). So you may need for example:
   - `clear(0.08, 1.0)` instead of `clear(0.08)`
   - `setColor(1.0, 0.0, 0.0, 1.0)` instead of `setColor(1.0, 0.0, 0.0)`
 - `end()` methods are replaced to `end_fbo()`, `end_shader()`, `end_cam()` etc ([Issue#11](https://github.com/funatsufumiya/tcxLua/issues/11)).

@@ -79,7 +79,9 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
         [](float r, float g, float b, float a){  trussc::clear(r, g, b, a); },
         [](){  trussc::clear(); },
         [](float gray, float a){  trussc::clear(gray, a); },
-        [](const Color & c){  trussc::clear(c); }
+        [](const Color & c){  trussc::clear(c); },
+        // NOTE: additional overrides provided by user,
+        [](float r, float g, float b){  trussc::clear(r, g, b); }
     ));
     // TrussC.h, LINE 391
     lua->set_function("flushDeferredShaderDraws", [](){  trussc::flushDeferredShaderDraws(); });
@@ -99,12 +101,18 @@ void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
     lua->set_function("setColor", sol::overload(
         [](float r, float g, float b, float a){  trussc::setColor(r, g, b, a); },
         [](float gray, float a){  trussc::setColor(gray, a); },
-        [](const Color & c){  trussc::setColor(c); }
+        [](const Color & c){  trussc::setColor(c); },
+        // NOTE: additional overrides provided by user,
+        [](float r, float g, float b){  trussc::setColor(r, g, b); }
     ));
     // TrussC.h, LINE 432
     lua->set_function("getColor", [](){ return trussc::getColor(); });
     // TrussC.h, LINE 437
-    lua->set_function("setColorHSB", [](float h, float s, float b, float a){  trussc::setColorHSB(h, s, b, a); });
+    lua->set_function("setColorHSB", sol::overload(
+        [](float h, float s, float b, float a){  trussc::setColorHSB(h, s, b, a); },
+        // NOTE: additional overrides provided by user,
+        [](float h, float s, float b){  trussc::setColorHSB(h, s, b); }
+    ));
     // TrussC.h, LINE 442
     lua->set_function("setColorOKLab", [](float L, float a_lab, float b_lab, float alpha){  trussc::setColorOKLab(L, a_lab, b_lab, alpha); });
     // TrussC.h, LINE 447

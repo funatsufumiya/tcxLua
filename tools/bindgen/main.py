@@ -61,6 +61,20 @@ ignore_classes = {
     "TrussC.h": []
 }
 
+additional_overrides = {
+    "TrussC.h": {
+        "trussc#setColor": [
+            "[](float r, float g, float b){  trussc::setColor(r, g, b); }"
+        ],
+        "trussc#setColorHSB": [
+            "[](float h, float s, float b){  trussc::setColorHSB(h, s, b); }"
+        ],
+        "trussc#clear": [
+            "[](float r, float g, float b){  trussc::clear(r, g, b); }"
+        ]
+    },
+}
+
 functions_map = {}
 
 def visitNode(node, ns="", clazz=""):
@@ -162,7 +176,22 @@ rp = "}"
 
 def bindFunctions(outfile, fn_map):
     for fns in fn_map.values():
-        overloads_count = len(fns)
+        additional_overrides_count = 0
+        additional_overrides_strs = []
+        i = 0
+        for k in fns.keys():
+            if i == 0:
+                fn0 = fns[k]
+                break
+            i += 1
+        if fn0 is not None:
+            filename = fn0["filename"] 
+            if filename in additional_overrides:
+                if fn0["id"] in additional_overrides[filename]:
+                    additional_overrides_strs = additional_overrides[filename][fn0["id"]]
+                    additional_overrides_count += len(additional_overrides_strs)
+
+        overloads_count = len(fns) + additional_overrides_count
         if overloads_count == 1:
             fn = None
             i = 0
@@ -234,6 +263,11 @@ def bindFunctions(outfile, fn_map):
                     overloads.append(f"[]({sarg}){lp} {ret} {id}({narg}); {rp}")
 
                 i += 1
+
+            if additional_overrides_count > 0:
+                for s in additional_overrides_strs:
+                    overloads.append(f"// NOTE: additional overrides provided by user")
+                    overloads.append(f"{s}")
 
             if fn_name != "":
                 overload_fns = ",\n        ".join(overloads)
