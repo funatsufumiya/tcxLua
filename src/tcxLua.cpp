@@ -26,7 +26,27 @@ void tcxLua::setBindings(const std::shared_ptr<sol::state>& lua){
 
 void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     sol::usertype<Vec2> vec2_type = lua->new_usertype<Vec2>("Vec2",
-        sol::constructors<Vec2(), Vec2(float, float), Vec2(const Vec2&)>()
+        sol::constructors<Vec2(), Vec2(float, float), Vec2(const Vec2&)>(),
+        sol::meta_function::addition,
+        sol::overload(
+           [](const Vec2& a, const Vec2& b){ return a + b; },
+           [](const Vec2& a, float b){ return a + b; }
+        ),
+        sol::meta_function::subtraction,
+        sol::overload(
+           [](const Vec2& a, const Vec2& b){ return a - b; },
+           [](const Vec2& a, float b){ return a - b; }
+        ),
+        sol::meta_function::multiplication,
+        sol::overload(
+           [](const Vec2& a, const Vec2& b){ return a * b; },
+           [](const Vec2& a, float b){ return a * b; }
+        ),
+        sol::meta_function::division,
+        sol::overload(
+           [](const Vec2& a, const Vec2& b){ return a / b; },
+           [](const Vec2& a, float b){ return a / b; }
+        )
     );
     vec2_type["x"] = &Vec2::x;
     vec2_type["y"] = &Vec2::y;
@@ -52,7 +72,27 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     vec2_type["fromAngle"] = &Vec2::fromAngle;
 
     sol::usertype<Vec3> vec3_type = lua->new_usertype<Vec3>("Vec3",
-        sol::constructors<Vec3(), Vec3(float, float, float), Vec3(const Vec2&), Vec3(const Vec3&)>()
+        sol::constructors<Vec3(), Vec3(float, float, float), Vec3(const Vec2&), Vec3(const Vec3&)>(),
+        sol::meta_function::addition,
+        sol::overload(
+           [](const Vec3& a, const Vec3& b){ return a + b; },
+           [](const Vec3& a, float b){ return a + b; }
+        ),
+        sol::meta_function::subtraction,
+        sol::overload(
+           [](const Vec3& a, const Vec3& b){ return a - b; },
+           [](const Vec3& a, float b){ return a - b; }
+        ),
+        sol::meta_function::multiplication,
+        sol::overload(
+           [](const Vec3& a, const Vec3& b){ return a * b; },
+           [](const Vec3& a, float b){ return a * b; }
+        ),
+        sol::meta_function::division,
+        sol::overload(
+           [](const Vec3& a, const Vec3& b){ return a / b; },
+           [](const Vec3& a, float b){ return a / b; }
+        )
     );
     vec3_type["x"] = &Vec3::x;
     vec3_type["y"] = &Vec3::y;
