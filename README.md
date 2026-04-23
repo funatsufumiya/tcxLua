@@ -19,6 +19,7 @@
 - Texture, Image, Pixels
 - Mesh
 - Shader
+- EasyCam
 
 ## Development
 

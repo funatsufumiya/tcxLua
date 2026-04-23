@@ -529,6 +529,43 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     );
     shader_type["submitVertices"] = &Shader::submitVertices;
     shader_type["executeDeferredDraw"] = &Shader::executeDeferredDraw;
+
+    sol::usertype<EasyCam> easycam_t = lua->new_usertype<EasyCam>("EasyCam",
+        sol::constructors<EasyCam()>()
+    );
+
+    easycam_t["begin"] = &EasyCam::begin;
+    easycam_t["end"] = &EasyCam::end;
+    easycam_t["reset"] = &EasyCam::reset;
+    easycam_t["setTarget"] = sol::overload(
+        [](EasyCam& m, float x, float y, float z){ return m.setTarget(x, y, z); },
+        [](EasyCam& m, const Vec3& v){ return m.setTarget(v); }
+    );
+    easycam_t["getTarget"] = &EasyCam::getTarget;
+    easycam_t["setUpAxis"] = sol::overload(
+        [](EasyCam& m, float x, float y, float z){ return m.setUpAxis(x, y, z); },
+        [](EasyCam& m, const Vec3& v){ return m.setUpAxis(v); }
+    );
+    easycam_t["getUpAxis"] = &EasyCam::getUpAxis;
+    easycam_t["setDistance"] = &EasyCam::setDistance;
+    easycam_t["getDistance"] = &EasyCam::getDistance;
+    easycam_t["setFov"] = &EasyCam::setFov;
+    easycam_t["getFov"] = &EasyCam::getFov;
+    easycam_t["setFovDeg"] = &EasyCam::setFovDeg;
+    easycam_t["setNearClip"] = &EasyCam::setNearClip;
+    easycam_t["setFarClip"] = &EasyCam::setFarClip;
+    easycam_t["setSensitivity"] = &EasyCam::setSensitivity;
+    easycam_t["setZoomSensitivity"] = &EasyCam::setZoomSensitivity;
+    easycam_t["setPanSensitivity"] = &EasyCam::setPanSensitivity;
+    easycam_t["setControlArea"] = &EasyCam::setControlArea;
+    easycam_t["clearControlArea"] = &EasyCam::clearControlArea;
+    easycam_t["enableMouseInput"] = &EasyCam::enableMouseInput;
+    easycam_t["disableMouseInput"] = &EasyCam::disableMouseInput;
+    easycam_t["isMouseInputEnabled"] = &EasyCam::isMouseInputEnabled;
+    easycam_t["mousePressed"] = &EasyCam::mousePressed;
+    easycam_t["mouseReleased"] = &EasyCam::mouseReleased;
+    easycam_t["mouseDragged"] = &EasyCam::mouseDragged;
+    easycam_t["mouseScrolled"] = &EasyCam::mouseScrolled;
 }
 
 struct Colors{};
