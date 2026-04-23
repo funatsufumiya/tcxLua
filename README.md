@@ -17,6 +17,12 @@
 - Fbo, Texture, Image, Pixels
 - EasyCam, Light, Material
 
+## Known Issues
+
+- Default value is not treated perfectly now (Issue #1). So you need for example:
+  - `clear(0.08, 1.0)` instead of `clear(0.08)`
+  - `setColor(1.0, 0.0, 0.0, 1.0)` instead of `setColor(1.0, 0.0, 0.0)`
+
 ## Development
 
 ### Bindgen
