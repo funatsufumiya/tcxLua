@@ -447,8 +447,8 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     img_type["getWidth"] = &Image::getWidth;
     img_type["getHeight"] = &Image::getHeight;
     img_type["getChannels"] = &Image::getChannels;
-    fbo_type["getPixels"] = [](Image& f) -> Pixels& { return f.getPixels(); };
-    fbo_type["getPixelsData"] = [](Image& f) -> unsigned char* { return f.getPixelsData(); };
+    img_type["getPixels"] = [](Image& f) -> Pixels& { return f.getPixels(); };
+    img_type["getPixelsData"] = [](Image& f) -> unsigned char* { return f.getPixelsData(); };
     img_type["getColor"] = &Image::getColor;
     img_type["setColor"] = &Image::setColor;
     img_type["update"] = &Image::update;
