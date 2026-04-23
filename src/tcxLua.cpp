@@ -678,6 +678,11 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     material_t["bronze"] = sol::var(&Material::bronze);
     material_t["emerald"] = sol::var(&Material::emerald);
     material_t["ruby"] = sol::var(&Material::ruby);
+    // FIXME: this makes error on runtime
+    // material_t["plastic"] = sol::var(sol::overload(
+    //     [](const Color& c, float r){ return Material::plastic(c, r); },
+    //     [](const Color& c){ return Material::plastic(c); }
+    // ));
     material_t["plastic"] = sol::var(&Material::plastic);
     material_t["rubber"] = sol::var(&Material::rubber);
     material_t["fromPhong"] = sol::overload(
