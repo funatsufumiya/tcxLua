@@ -16,8 +16,13 @@ void tcApp::setup() {
             return "Vec3(".. v.x .. ", ".. v.y .. ", ".. v.z .. ")"
         end
 
-        local v = Vec2.new(1.0, 2.0)
-        print("v = " .. strv2(v))
+        local v1 = Vec2.new(1.0, 2.0)
+        local v2 = Vec2.new(3.0, 4.0)
+        print("v1 = " .. strv2(v1))
+        print("v2 = " .. strv2(v2))
+        print("v2:distance(v1) = " .. v2:distance(v1))
+        print("v1:angle() = " .. v1:angle())
+        print("v1:angle(v2) = " .. v1:angle(v2))
 
         local quat = Quaternion.new(1.0, 2.0, 3.0, 4.0)
         print("quat = " .. strq(quat))

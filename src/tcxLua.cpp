@@ -40,11 +40,10 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     vec2_type["cross"] = &Vec2::cross;
     vec2_type["distance"] = &Vec2::distance;
     vec2_type["distanceSquared"] = &Vec2::distanceSquared;
-    // TODO: implement
-    // vec2_type["angle"] = sol::overload(
-    //     [](){ return Vec2::angle(); },
-    //     [](const Vec2& v){ return Vec2::angle(v); }
-    // );
+    vec2_type["angle"] = sol::overload(
+        [](Vec2& p){ return p.angle(); },
+        [](Vec2& p, const Vec2& v){ return p.angle(v); }
+    );
     vec2_type["rotated"] = &Vec2::rotated;
     vec2_type["rotate"] = &Vec2::rotate;
     vec2_type["lerp"] = &Vec2::lerp;
