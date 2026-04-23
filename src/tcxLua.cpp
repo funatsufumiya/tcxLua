@@ -186,8 +186,8 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     mat4_type["rotate"] = &Mat4::rotate;
     mat4_type["scale"] = sol::overload(
         [](Mat4& m, float s){ return m.scale(s); },
-        [](Mat4& m, float tx, float ty, float tz){ return m.scale(tx, ty, tz); },
-        [](Mat4& m, const Vec3& t){ return m.scale(t); }
+        [](Mat4& m, float sx, float sy, float sz){ return m.scale(sx, sy, sz); },
+        [](Mat4& m, const Vec3& s){ return m.scale(s); }
     );
     mat4_type["transposed"] = &Mat4::transposed;
     mat4_type["inverted"] = &Mat4::inverted;
