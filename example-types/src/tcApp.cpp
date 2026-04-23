@@ -8,9 +8,16 @@ void tcApp::setup() {
             return "Quaternion(".. q.w .. ", ".. q.x .. ", ".. q.y .. ", ".. q.z .. ")"
         end
 
+        function strv2(v)
+            return "Vec2(".. v.x .. ", ".. v.y .. ")"
+        end
+
+        function strv3(v)
+            return "Vec3(".. v.x .. ", ".. v.y .. ", ".. v.z .. ")"
+        end
+
         local v = Vec2.new(1.0, 2.0)
-        print("v.x = " .. v.x)
-        print("v.y = " .. v.y)
+        print("v = " .. strv2(v))
 
         local quat = Quaternion.new(1.0, 2.0, 3.0, 4.0)
         print("quat = " .. strq(quat))
