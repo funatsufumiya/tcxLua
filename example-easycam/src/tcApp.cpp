@@ -6,6 +6,8 @@ void tcApp::setup() {
     std::string setupLuaSource = R"LUA(
         setWindowTitle("easyCamExample");
 
+        showHelp = true
+
         -- Camera initial settings
         cam = EasyCam.new()
         cam:setDistance(600)
@@ -114,32 +116,23 @@ void tcApp::draw() {
                 -- --- 2D drawing (UI) ---
                 setColor(1.0, 1.0)
 
-                --   std::stringstream ss;
-                --   ss << "FPS: " << (int)getFrameRate() << "\n\n";
-                --   ss << "MOUSE INPUT: " << (cam.isMouseInputEnabled() ? "ON" : "OFF") << "\n";
-                --   ss << "Distance: " << (int)cam.getDistance() << "\n";
-                --   ss << "\n";
-                --   ss << "Controls:\n";
-                --   ss << "  LEFT DRAG: rotate camera\n";
-                --   ss << "  MIDDLE DRAG: pan camera\n";
-                --   ss << "  SCROLL: zoom in/out\n";
-                --   ss << "\n";
-                --   ss << "Keys:\n";
-                --   ss << "  c: toggle mouse input\n";
-                --   ss << "  r: reset camera\n";
-                --   ss << "  f: toggle fullscreen\n";
-                --   ss << "  h: toggle this help\n";
-
-                local ss = ""
-                ss = ss .. "FPS: " .. math.floor(getFrameRate()) .. "\n\n"
-                ss = ss .. "MOUSE INPUT: " .. (cam:isMouseInputEnabled() and "ON" or "OFF") .. "\n\n"
-                ss = ss .. "Distance: " .. math.floor(cam:getDistance()) .. "\n\n"
-                ss = ss .. "\n"
-                ss = ss .. "Controls:\n"
-                ss = ss .. "  LEFT DRAG: rotate camera\n"
-                ss = ss .. "  MIDDLE DRAG: pan camera\n"
-                ss = ss .. "  SCROLL: zoom in/out\n"
-                drawBitmapString(ss, 20, 20, true);
+                if showHelp then
+                    local ss = ""
+                    ss = ss .. "FPS: " .. math.floor(getFrameRate()) .. "\n"
+                    ss = ss .. "MOUSE INPUT: " .. (cam:isMouseInputEnabled() and "ON" or "OFF") .. "\n"
+                    ss = ss .. "Distance: " .. math.floor(cam:getDistance()) .. "\n"
+                    ss = ss .. "\n"
+                    ss = ss .. "Controls:\n"
+                    ss = ss .. "  LEFT DRAG: rotate camera\n"
+                    ss = ss .. "  MIDDLE DRAG: pan camera\n"
+                    ss = ss .. "  SCROLL: zoom in/out\n"
+                    ss = ss .. "Keys:\n"
+                    ss = ss .. "  c: toggle mouse input\n"
+                    ss = ss .. "  r: reset camera\n"
+                    ss = ss .. "  f: toggle fullscreen\n"
+                    ss = ss .. "  h: toggle this help\n"
+                    drawBitmapString(ss, 20, 20, true);
+                end
             end
         )LUA";
 
@@ -152,7 +145,38 @@ void tcApp::draw() {
     // ((*lua)["draw"])();
 }
 
-void tcApp::keyPressed(int key) {}
+void tcApp::keyPressed(int key) {
+    if(isFirstKey){
+        std::string drawKeySource = R"LUA(
+            function keyPressed(key)
+                local c = string.char(key)
+                -- print("keyPressed: " .. c)
+                if c == "f" or c == "F" then
+                    toggleFullscreen()
+                elseif c == "c" or c == "C" then
+                    if cam:isMouseInputEnabled() then
+                        cam:disableMouseInput()
+                    else
+                        cam:enableMouseInput()
+                    end
+                elseif c == "r" or c == "R" then
+                    cam:reset()
+                    cam:setDistance(600)
+                elseif c == "h" or c == "H" then
+                    showHelp = not showHelp
+                end
+            end
+        )LUA";
+
+        lua->script(drawKeySource);
+
+        isFirstKey = false;
+    }
+
+    // lua->script("keyPressed(" + std::to_string(key) + ")");
+    ((*lua)["keyPressed"])(key);
+
+}
 void tcApp::keyReleased(int key) {}
 
 void tcApp::mousePressed(Vec2 pos, int button) {}
