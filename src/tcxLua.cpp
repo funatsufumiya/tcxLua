@@ -102,6 +102,30 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
                  float m30, float m31, float m32, float m33),
             Mat4(const Mat4&)>()
     );
+    mat4_type["at"] = [](Mat4& m, int raw, int col) -> float { return (float)(m.at(raw, col)); }; // WORKAROUND
+    mat4_type["set"] = [](Mat4& m, int raw, int col, int v){ m.at(raw, col) = v; }; // WORKAROUND
+    mat4_type["identity"] = &Mat4::identity;
+    mat4_type["fromHomography"] = &Mat4::fromHomography;
+    mat4_type["translate"] = sol::overload(
+        [](Mat4& m, float tx, float ty, float tz){ return m.translate(tx, ty, tz); },
+        [](Mat4& m, const Vec3& t){ return m.translate(t); }
+    );
+    mat4_type["rotateX"] = &Mat4::rotateX;
+    mat4_type["rotateY"] = &Mat4::rotateY;
+    mat4_type["rotateZ"] = &Mat4::rotateZ;
+    mat4_type["rotate"] = &Mat4::rotate;
+    mat4_type["scale"] = sol::overload(
+        [](Mat4& m, float s){ return m.scale(s); },
+        [](Mat4& m, float tx, float ty, float tz){ return m.scale(tx, ty, tz); },
+        [](Mat4& m, const Vec3& t){ return m.scale(t); }
+    );
+    mat4_type["transposed"] = &Mat4::transposed;
+    mat4_type["inverted"] = &Mat4::inverted;
+    mat4_type["lookAt"] = &Mat4::lookAt;
+    mat4_type["ortho"] = &Mat4::ortho;
+    mat4_type["perspective"] = &Mat4::perspective;
+    mat4_type["frustum"] = &Mat4::frustum;
+    
 }
 
 // } // namespace tcx::lua
