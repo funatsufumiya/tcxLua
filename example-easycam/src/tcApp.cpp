@@ -112,7 +112,34 @@ void tcApp::draw() {
                 cam:end_cam()
 
                 -- --- 2D drawing (UI) ---
-                -- setColor(1.0)
+                setColor(1.0, 1.0)
+
+                --   std::stringstream ss;
+                --   ss << "FPS: " << (int)getFrameRate() << "\n\n";
+                --   ss << "MOUSE INPUT: " << (cam.isMouseInputEnabled() ? "ON" : "OFF") << "\n";
+                --   ss << "Distance: " << (int)cam.getDistance() << "\n";
+                --   ss << "\n";
+                --   ss << "Controls:\n";
+                --   ss << "  LEFT DRAG: rotate camera\n";
+                --   ss << "  MIDDLE DRAG: pan camera\n";
+                --   ss << "  SCROLL: zoom in/out\n";
+                --   ss << "\n";
+                --   ss << "Keys:\n";
+                --   ss << "  c: toggle mouse input\n";
+                --   ss << "  r: reset camera\n";
+                --   ss << "  f: toggle fullscreen\n";
+                --   ss << "  h: toggle this help\n";
+
+                local ss = ""
+                ss = ss .. "FPS: " .. math.floor(getFrameRate()) .. "\n\n"
+                ss = ss .. "MOUSE INPUT: " .. (cam:isMouseInputEnabled() and "ON" or "OFF") .. "\n\n"
+                ss = ss .. "Distance: " .. math.floor(cam:getDistance()) .. "\n\n"
+                ss = ss .. "\n"
+                ss = ss .. "Controls:\n"
+                ss = ss .. "  LEFT DRAG: rotate camera\n"
+                ss = ss .. "  MIDDLE DRAG: pan camera\n"
+                ss = ss .. "  SCROLL: zoom in/out\n"
+                drawBitmapString(ss, 20, 20, true);
             end
         )LUA";
 
@@ -121,8 +148,8 @@ void tcApp::draw() {
         isFirstDraw = false;
     }
 
-    // lua->script("draw()");
-    ((*lua)["draw"])();
+    lua->script("draw()");
+    // ((*lua)["draw"])();
 }
 
 void tcApp::keyPressed(int key) {}
