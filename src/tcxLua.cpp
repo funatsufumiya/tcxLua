@@ -709,6 +709,33 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     material_t["setOcclusionTexture"] = &Material::setOcclusionTexture;
     material_t["getOcclusionTexture"] = &Material::getOcclusionTexture;
     material_t["hasOcclusionTexture"] = &Material::hasOcclusionTexture;
+
+    lua->set_function("loadJson", &trussc::loadJson);
+    lua->set_function("saveJson", &trussc::saveJson);
+    lua->set_function("parseJson", &trussc::parseJson);
+    lua->set_function("toJsonString", &trussc::toJsonString);
+
+    sol::usertype<Json> json_t = lua->new_usertype<Json>("Json",
+        sol::constructors<Json()>()
+    );
+
+    sol::usertype<Xml> xml_t = lua->new_usertype<Xml>("Xml",
+        sol::constructors<Xml()>(),
+        "load", &Xml::load,
+        "parse", &Xml::parse,
+        "save", &Xml::save,
+        "toString", &Xml::toString,
+        "root", [](Xml& x){ return x.root(); },
+        "addRoot", &Xml::addRoot,
+        "child", &Xml::child,
+        "document", [](Xml& x) -> XmlDocument& { return x.document(); },
+        "empty", &Xml::empty,
+        "addDeclaration", sol::overload(
+            [](Xml& x){ return x.addDeclaration(); },
+            [](Xml& x, const std::string& a){ return x.addDeclaration(a); },
+            [](Xml& x, const std::string& a, const std::string& b){ return x.addDeclaration(a, b); }
+        )
+    );
 }
 
 struct Colors{};
