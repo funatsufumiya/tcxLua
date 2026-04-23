@@ -5,6 +5,21 @@
 - Currently LuaJIT support is not implemented yet.
 - Not fully binded (currently partially binded to TrussC functions, types, operators, math)
 
+## Binding coverage
+
+### Dones
+
+- trussc (TrussC.h directly defined functions)
+- cmath (common use ones only)
+- tcMath
+- Vec2, Vec3, Vec4, Mat
+- Color
+- colors (constants)
+- TAU, PI
+- Fbo
+- Texture
+- Mesh
+
 ## Bindgen
 
 Please read [tools/bindgen/README.md](tools/bindgen/README.md) in detail.
