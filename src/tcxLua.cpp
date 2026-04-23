@@ -453,7 +453,7 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     img_type["setColor"] = &Image::setColor;
     img_type["update"] = &Image::update;
     img_type["setDirty"] = &Image::setDirty;
-    fbo_type["getTexture"] = [](Image& f) -> Texture& { return f.getTexture(); };
+    img_type["getTexture"] = [](Image& f) -> Texture& { return f.getTexture(); };
 }
 
 struct Colors{};
