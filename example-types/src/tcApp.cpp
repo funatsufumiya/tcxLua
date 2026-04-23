@@ -22,6 +22,8 @@ void tcApp::setup() {
 
         local c = Color.new(1.0, 0.0, 0.0)
         print("c = " .. strc(c))
+        print("yellow = " .. strc(colors.yellow))
+        print("magenta = " .. strc(colors.magenta))
 
         local v1 = Vec2.new(1.0, 2.0)
         local v2 = Vec2.new(3.0, 4.0)
