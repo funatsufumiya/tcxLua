@@ -16,7 +16,7 @@
 - Mesh, Shader
 - Fbo, Texture, Image, Pixels
 - EasyCam, Light, Material
-- Font
+- Font, Path
 - Json, Xml
 - `Tween<T>` (as TweenFloat, TweenVec2, TweenVec3, TweenColor)
 
