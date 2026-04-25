@@ -16,21 +16,17 @@ namespace tcx::lua {
 
 class XmlNodeStorage {
 protected:
-	// std::vector<XmlNode> data;
     pugi::xml_object_range<pugi::xml_node_iterator> data;
 
 public:
-    //XmlNodeStorage() {};
     XmlNodeStorage(const pugi::xml_object_range<pugi::xml_node_iterator>& data) : 
         data(data)
     {
     };
 
 public:
-	// using value_type = decltype(data)::value_type;
 	using value_type = pugi::xml_node;
 	using iterator = decltype(data)::iterator;
-	//using size_type = decltype(data)::size_type;
     using size_type = size_t;
 
 	iterator begin() {
@@ -45,8 +41,6 @@ public:
 	}
     value_type at(size_t index){
         // NOTE: Lua index starts from 1
-
-        // return *(data.begin() + i);
         size_t i=0;
         for(auto it = data.begin(); it != data.end(); ++it){
             if(i == index - 1){
@@ -56,14 +50,6 @@ public:
         }
         assert(false);
     }
-	// size_type max_size() const noexcept {
-	// 	// return data.max_size();
-    //     // return std::distance(data.begin(), data.end()); // WORKAROUND
-    //     return 999999; // WORKAROUND
-	// }
-	// void push_back(const XmlNode& value) {
-	// 	data.push_back(value);
-	// }
 	bool empty() const noexcept {
 		return data.empty();
 	}
@@ -73,6 +59,7 @@ public:
 
 namespace sol {
     template <>
+    // FIXME
     struct is_container<tcx::lua::XmlNodeStorage> : std::false_type {};
 } // namespace sol
 
