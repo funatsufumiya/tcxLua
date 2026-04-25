@@ -18,7 +18,7 @@
 - EasyCam, Light, Material
 - Font
 - Json, Xml
-- Tween
+- `Tween<T>` (as TweenFloat, TweenVec2, TweenVec3, TweenColor)
 
 ## Known Issues
 
