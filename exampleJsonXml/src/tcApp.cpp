@@ -63,8 +63,8 @@ void tcApp::setup() {
 
                 local children = loadedRoot:child("features"):children("feature")
                 addMessage(" features count = " .. #children)
-                for i = 1, #children do
-                    addMessage(" features["..i.."] text = " .. children[i]:text():get())
+                for k, v in ipairs(children) do
+                    addMessage(" - feature " .. v:text():get())
                 end
             end
 
