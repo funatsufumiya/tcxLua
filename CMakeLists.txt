@@ -11,16 +11,16 @@ option(USE_LUAJIT "Enable building with LuaJIT" OFF)
 if(USE_LUAJIT)
     message(STATUS "[${ADDON_NAME}] LuaJIT enabled")
 
+    set(LUAJIT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LuaJIT)
+    add_subdirectory(luajit-cmake)
+    set(LUAJIT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LuaJIT) # WORKAROUND
+
     set(LUA_C_SOURCES "")
     set(LUA_CXX_SOURCES "")
     set(LUA_INCLUDE "")
 
     # set(LUA_HEADERS "")
     file(GLOB LUA_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/lua/src/*.h)
-    
-    set(LUAJIT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LuaJIT)
-
-    add_subdirectory(luajit-cmake)
 else()
     message(STATUS "[${ADDON_NAME}] LuaJIT disabled (by default)")
 
