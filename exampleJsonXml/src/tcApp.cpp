@@ -3,8 +3,6 @@
 void tcApp::setup() {
     lua = tcx_lua.getLuaState();
 
-    lua->set_function("testJson", [&](){ testJson(); });
-
     std::string setupLuaSource = R"LUA(
         setWindowTitle("jsonXmlExample")
         tcSetConsoleLogLevel(LogLevel.Verbose)
@@ -14,9 +12,54 @@ void tcApp::setup() {
         function addMessage(msg)
             table.insert(messages, msg)
             -- Remove old messages to fit on screen
-            if #messages > 35 then
+            while #messages > 35 do
                 table.remove(messages, 1)
             end
+        end
+
+        function testJson()
+            addMessage("--- JSON Test ---")
+
+            -- Create JSON
+            local j = Json.new()
+            j["name"] = "TrussC"
+            -- print(j["name"])
+            j["version"] = 0.1
+            -- print(j["version"])
+            j["features"] = {"graphics", "audio", "events"}
+
+            local settings = Json.new() -- WORKAROUND
+            settings["width"] = 1024
+            settings["height"] = 768
+            settings["fullscreen"] = false
+            j["settings"] = settings
+
+            -- Convert to string
+            local jsonStr = toJsonString(j, 2)
+            addMessage("Created JSON:")
+
+            -- Display each line
+            for line in jsonStr:gmatch("([^\n]*)\n?") do
+                addMessage("  " .. line)
+            end
+
+            -- Save to file
+            -- local path = "/tmp/trussc_test.json"
+            local path = "trussc_test.json"
+            if saveJson(j, path) then
+                addMessage("Saved to: " .. path)
+            end
+
+            -- Load from file
+            local loaded = loadJson(path)
+            if not loaded:empty() then
+                addMessage("Loaded back:")
+                addMessage("  name: " .. loaded["name"]:get_string())
+                addMessage("  version: " .. loaded["version"]:get_double())
+                addMessage("  features count: " .. loaded["features"]:size())
+            end
+
+            addMessage("")
         end
 
         function testXml()
@@ -138,47 +181,6 @@ void tcApp::keyPressed(int key) {
 
 void tcApp::addMessage(const std::string& msg){
     ((*lua)["addMessage"])(msg);
-}
-
-void tcApp::testJson() {
-    addMessage("--- JSON Test ---");
-
-    // Create JSON
-    Json j;
-    j["name"] = "TrussC";
-    j["version"] = 0.1;
-    j["features"] = {"graphics", "audio", "events"};
-    j["settings"]["width"] = 1024;
-    j["settings"]["height"] = 768;
-    j["settings"]["fullscreen"] = false;
-
-    // Convert to string
-    string jsonStr = toJsonString(j, 2);
-    addMessage("Created JSON:");
-
-    // Display each line
-    stringstream ss(jsonStr);
-    string line;
-    while (getline(ss, line)) {
-        addMessage("  " + line);
-    }
-
-    // Save to file
-    string path = "/tmp/trussc_test.json";
-    if (saveJson(j, path)) {
-        addMessage("Saved to: " + path);
-    }
-
-    // Load from file
-    Json loaded = loadJson(path);
-    if (!loaded.empty()) {
-        addMessage("Loaded back:");
-        addMessage("  name: " + loaded["name"].get<string>());
-        addMessage("  version: " + to_string(loaded["version"].get<double>()));
-        addMessage("  features count: " + to_string(loaded["features"].size()));
-    }
-
-    addMessage("");
 }
 
 void tcApp::keyReleased(int key) {}

@@ -48,6 +48,80 @@ void tcxLua::setConstBindings(const std::shared_ptr<sol::state>& lua){
     l["QUARTER_TAU"] = QUARTER_TAU;
 }
 
+template<typename T>
+inline void json_new_index_table_fn(Json& j, T i, const sol::table& tbl){
+    int _i = 0;
+    for (std::pair<sol::object, sol::object>& kv : tbl) 
+    {
+        if (kv.first.get_type() == sol::type::string)
+        {
+            std::string key = kv.first.as<std::string>();
+            // std::cerr << key << std::endl;
+            // std::cerr << key << ": " << kv.second() << std::endl;
+
+            if(kv.second.get_type() == sol::type::number){
+                lua_Number v = kv.second.as<lua_Number>();
+                j[i][key] = v;
+            }else if(kv.second.get_type() == sol::type::string){
+                std::string v = kv.second.as<std::string>();
+                j[i][key] = v;
+            }else if(kv.second.get_type() == sol::type::nil){
+                nlohmann::json j_null;
+                j[i][key] = j_null;
+            }else if(kv.second.get_type() == sol::type::none){
+                nlohmann::json j_null;
+                j[i][key] = j_null;
+            }else if(kv.second.get_type() == sol::type::table){
+                j[i][key] = nlohmann::json::object({});
+                auto&& v = kv.second.as<sol::table>();
+                json_new_index_table_fn(j[i], key, v);
+            }else{
+                std::cerr << "[tcxLua error] unsupported table insertion";
+                std::cerr << " (debug value type id: " << (int)kv.second.get_type() << ")" << std::endl;
+                assert(false);
+            }
+        }
+
+        if (kv.first.get_type() == sol::type::number)
+        {
+            lua_Number _key = kv.first.as<lua_Number>();
+            int key = _key - 1; // Lua index workaround
+
+            // std::cerr << key << std::endl;
+            // std::cerr << key << ": " << kv.second() << std::endl;
+
+            if(kv.second.get_type() == sol::type::number){
+                lua_Number v = kv.second.as<lua_Number>();
+                j[i][key] = v;
+            }else if(kv.second.get_type() == sol::type::string){
+                std::string v = kv.second.as<std::string>();
+                j[i][key] = v;
+            }else if(kv.second.get_type() == sol::type::nil){
+                nlohmann::json j_null;
+                j[i][key] = j_null;
+            }else if(kv.second.get_type() == sol::type::none){
+                nlohmann::json j_null;
+                j[i][key] = j_null;
+            }else if(kv.second.get_type() == sol::type::table){
+                j[i][key] = nlohmann::json::object({});
+                auto&& v = kv.second.as<sol::table>();
+                json_new_index_table_fn(j[i], key, v);
+            }else{
+                std::cerr << "[tcxLua error] unsupported table insertion";
+                std::cerr << " (debug value type id: " << (int)kv.second.get_type() << ")" << std::endl;
+                assert(false);
+            }
+        }
+
+        _i++;
+    }
+
+    if(_i == 0){
+        j[i] = nlohmann::json::object({});
+    }
+}
+
+
 void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     sol::usertype<Vec2> vec2_type = lua->new_usertype<Vec2>("Vec2",
         sol::constructors<Vec2(), Vec2(float, float), Vec2(const Vec2&)>(),
@@ -724,12 +798,49 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     material_t["hasOcclusionTexture"] = &Material::hasOcclusionTexture;
 
     lua->set_function("loadJson", &trussc::loadJson);
-    lua->set_function("saveJson", &trussc::saveJson);
+    lua->set_function("saveJson", sol::overload(
+        [](const Json& j, const std::string& path){ return trussc::saveJson(j, path); },
+        [](const Json& j, const std::string& path, int indent){ return trussc::saveJson(j, path, indent); }
+    ));
     lua->set_function("parseJson", &trussc::parseJson);
     lua->set_function("toJsonString", &trussc::toJsonString);
 
     sol::usertype<Json> json_t = lua->new_usertype<Json>("Json",
-        sol::constructors<Json()>()
+        sol::constructors<Json()>(),
+        "get_string", [](Json& j){ return j.get<std::string>(); },
+        "get_double", [](Json& j){ return j.get<double>(); },
+        "get_float", [](Json& j){ return j.get<float>(); },
+        "get_int", [](Json& j){ return j.get<int>(); },
+        "get_bool", [](Json& j){ return j.get<bool>(); },
+        "empty", &Json::empty,
+        "size", &Json::size,
+        sol::meta_function::index, sol::overload(
+            [](Json& j, size_t i){ return j[i]; },
+            [](Json& j, const std::string& s){ return j[s]; }
+        ),
+        sol::meta_function::new_index, sol::overload(
+            [](Json& j, size_t i, bool v){ return j[i] = v; },
+            [](Json& j, size_t i, int v){ return j[i] = v; },
+            [](Json& j, size_t i, float v){ return j[i] = v; },
+            [](Json& j, size_t i, long v){ return j[i] = v; },
+            [](Json& j, size_t i, double v){ return j[i] = v; },
+            [](Json& j, size_t i, const std::string& v){ return j[i] = v; },
+            [](Json& j, size_t i, const Json& v){ return j[i] = v; },
+            // [](Json& j, size_t i, const sol::object& v){ return j[i] = v; },
+            [](Json& j, const std::string& s, bool v){ return j[s] = v; },
+            [](Json& j, const std::string& s, int v){ return j[s] = v; },
+            [](Json& j, const std::string& s, float v){ return j[s] = v; },
+            [](Json& j, const std::string& s, long v){ return j[s] = v; },
+            [](Json& j, const std::string& s, double v){ return j[s] = v; },
+            [](Json& j, const std::string& s, const std::string& v){ return j[s] = v; },
+            [](Json& j, const std::string& s, const Json& v){ return j[s] = v; },
+            [](Json& j, size_t i, const sol::table& tbl){
+                json_new_index_table_fn(j, i, tbl);
+            },
+            [](Json& j, const std::string& i, const sol::table& tbl){
+                json_new_index_table_fn(j, i, tbl);
+            }
+        )
     );
 
     lua->set_function("loadXml", &trussc::loadXml);
