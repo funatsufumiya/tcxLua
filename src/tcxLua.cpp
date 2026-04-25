@@ -4,6 +4,12 @@
 #include "sol/sol.hpp"
 using namespace tc;
 
+// WORKAROUND: to support deprecated functions in lua
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 // namespace tcx::lua {
 
 std::shared_ptr<sol::state> tcxLua::getLuaState(){
@@ -935,3 +941,6 @@ void tcxLua::setMathBindings(const std::shared_ptr<sol::state>& lua){
 }
 
 // } // namespace tcx::lua
+
+#pragma GCC diagnostic pop
+#pragma clang diagnostic pop

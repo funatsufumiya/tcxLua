@@ -15,11 +15,20 @@ prev = """
 #include "sol/sol.hpp"
 using namespace tc;
 
+// WORKAROUND: to support deprecated functions in lua
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 void tcxLua::setTrussCGeneratedBindings(const std::shared_ptr<sol::state>& lua){
 """
 
 after = """
 }
+
+#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 """
 
 target_filenames = [
