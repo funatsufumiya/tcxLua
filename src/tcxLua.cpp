@@ -874,16 +874,8 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         "last_attribute", &XmlNode::last_attribute,
         "remove_children", &XmlNode::remove_children,
         // "children", [](XmlNode& x){ return x.children(); }
-        "children", [](XmlNode& x){ // WORKAROUND // WIP
-            //auto&& children = x.children();
-            // std::vector<XmlNode> nodes;
+        "children", [](XmlNode& x){
             tcx::lua::XmlNodeStorage storage(x.children());
-            // for(auto&& child : children){
-            //     storage.push_back(child);
-            // }
-
-            // return sol::nested<std::vector<XmlNode>>(nodes);
-            // // return sol::make_reference<sol::table>( *lua, nodes );
             return storage;
         }
     );
