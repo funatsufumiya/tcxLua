@@ -121,7 +121,6 @@ inline void json_new_index_table_fn(Json& j, T i, const sol::table& tbl){
     }
 }
 
-
 void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     sol::usertype<Vec2> vec2_type = lua->new_usertype<Vec2>("Vec2",
         sol::constructors<Vec2(), Vec2(float, float), Vec2(const Vec2&)>(),
@@ -1064,16 +1063,10 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         "InOut", sol::var(EaseMode::InOut)
     );
 
-    // using TweenFloat = Tween<float>;
-
-    // sol::usertype<TweenFloat> tween_t = lua->new_usertype<TweenFloat>("TweenFloat",
-    //     sol::constructors<
-    //         TweenFloat(),
-    //         TweenFloat(float, float, float),
-    //         TweenFloat(float, float, float, EaseType),
-    //         TweenFloat(float, float, float, EaseType, EaseMode),
-    //         TweenFloat(TweenFloat&&)>()
-    // );
+    defineTween<Tween<float>, float>(lua, "TweenFloat");
+    defineTween<Tween<Vec2>, Vec2>(lua, "TweenVec2");
+    defineTween<Tween<Vec3>, Vec3>(lua, "TweenVec3");
+    defineTween<Tween<Color>, Color>(lua, "TweenColor");
 }
 
 struct Colors{};
