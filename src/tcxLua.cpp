@@ -5,10 +5,12 @@
 using namespace tc;
 
 // WORKAROUND: to support deprecated functions in lua
+#ifndef _MSC_VER
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif // #ifndef _MSC_VER
 
 // namespace tcx::lua {
 
@@ -942,5 +944,7 @@ void tcxLua::setMathBindings(const std::shared_ptr<sol::state>& lua){
 
 // } // namespace tcx::lua
 
+#ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #pragma clang diagnostic pop
+#endif // #ifndef _MSC_VER
