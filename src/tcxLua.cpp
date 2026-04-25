@@ -520,7 +520,9 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     tex_type["getSampler"] = &Texture::getSampler;
     tex_type["getAttachmentView"] = &Texture::getAttachmentView;
 
-    sol::usertype<TextureFormat> tex_format_type = lua->new_usertype<TextureFormat>("TextureFormat");
+    sol::usertype<TextureFormat> tex_format_type = lua->new_usertype<TextureFormat>("TextureFormat",
+        sol::meta_function::equal_to, [](TextureFormat a, TextureFormat b){ return a == b; }
+    );
     tex_format_type["RGBA8"] = sol::var(TextureFormat::RGBA8);
     tex_format_type["RGBA16F"] = sol::var(TextureFormat::RGBA16F);
     tex_format_type["RGBA32F"] = sol::var(TextureFormat::RGBA32F);
@@ -585,7 +587,9 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     pix_type["loadFromMemory"] = &Pixels::loadFromMemory;
     pix_type["save"] = &Pixels::save;
 
-    sol::usertype<PixelFormat> pix_format_type = lua->new_usertype<PixelFormat>("PixelFormat");
+    sol::usertype<PixelFormat> pix_format_type = lua->new_usertype<PixelFormat>("PixelFormat",
+        sol::meta_function::equal_to, [](PixelFormat a, PixelFormat b){ return a == b; }
+    );
     pix_format_type["U8"] = sol::var(PixelFormat::U8);
     pix_format_type["F32"] = sol::var(PixelFormat::F32);
 
@@ -734,7 +738,9 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     light_t["isEnabled"] = &Light::isEnabled;
     light_t["calculate"] = &Light::calculate;
 
-    sol::usertype<LightType> lighttype_t = lua->new_usertype<LightType>("LightType");
+    sol::usertype<LightType> lighttype_t = lua->new_usertype<LightType>("LightType",
+        sol::meta_function::equal_to, [](LightType a, LightType b){ return a == b; }
+    );
     lighttype_t["Directional"] = sol::var(LightType::Directional);
     lighttype_t["Point"] = sol::var(LightType::Point);
     lighttype_t["Spot"] = sol::var(LightType::Spot);
@@ -938,7 +944,9 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         }
     );
 
-    sol::usertype<LogLevel> loglevel_t = lua->new_usertype<LogLevel>("LogLevel");
+    sol::usertype<LogLevel> loglevel_t = lua->new_usertype<LogLevel>("LogLevel",
+        sol::meta_function::equal_to, [](LogLevel a, LogLevel b){ return a == b; }
+    );
     loglevel_t["Verbose"] = sol::var(LogLevel::Verbose);
     loglevel_t["Notice"] = sol::var(LogLevel::Notice);
     loglevel_t["Warning"] = sol::var(LogLevel::Warning);
