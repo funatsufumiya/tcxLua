@@ -945,6 +945,11 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     loglevel_t["Error"] = sol::var(LogLevel::Error);
     loglevel_t["Fatal"] = sol::var(LogLevel::Fatal);
     loglevel_t["Silent"] = sol::var(LogLevel::Silent);
+
+    sol::usertype<Font> font_t = lua->new_usertype<Font>("Font",
+        sol::constructors<Font(), Font(const Font&), Font(Font&&)>(),
+        "load", &Font::load
+    );
 }
 
 struct Colors{};
