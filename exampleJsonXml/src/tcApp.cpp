@@ -4,7 +4,6 @@ void tcApp::setup() {
     lua = tcx_lua.getLuaState();
 
     lua->set_function("testJson", [&](){ testJson(); });
-    //lua->set_function("testXml", [&](){ testXml(); });
 
     std::string setupLuaSource = R"LUA(
         setWindowTitle("jsonXmlExample")
@@ -62,11 +61,12 @@ void tcApp::setup() {
                 addMessage("  project name: " .. loadedRoot:attribute("name"):value())
                 addMessage("  version: " .. loadedRoot:child("info"):child("version"):text():get())
 
-                -- local featureCount = 0
-                -- for f in loadedRoot:child("features"):children("feature") do
-                --     featureCount = featureCount + 1
-                -- end
-                -- addMessage("  features count: " .. featureCount)
+                local children = loadedRoot:child("features"):children("feature")
+                addMessage(" features count = " .. #children)
+                for i = 1, #children do
+                    -- addMessage(tostring(i))
+                    addMessage(" features["..i.."] text = " .. children[i]:text():get())
+                end
             end
 
             addMessage("")
@@ -177,60 +177,6 @@ void tcApp::testJson() {
         addMessage("  name: " + loaded["name"].get<string>());
         addMessage("  version: " + to_string(loaded["version"].get<double>()));
         addMessage("  features count: " + to_string(loaded["features"].size()));
-    }
-
-    addMessage("");
-}
-
-void tcApp::testXml() {
-    addMessage("--- XML Test ---");
-
-    // Create XML
-    Xml xml;
-    xml.addDeclaration();
-
-    auto root = xml.addRoot("project");
-    root.append_attribute("name") = "TrussC";
-
-    auto info = root.append_child("info");
-    info.append_child("version").text() = "0.1";
-    info.append_child("author").text() = "TrussC Team";
-
-    auto features = root.append_child("features");
-    features.append_child("feature").text() = "graphics";
-    features.append_child("feature").text() = "audio";
-    features.append_child("feature").text() = "events";
-
-    // Convert to string
-    string xmlStr = xml.toString();
-    addMessage("Created XML:");
-
-    // Display each line
-    stringstream ss(xmlStr);
-    string line;
-    while (getline(ss, line)) {
-        addMessage("  " + line);
-    }
-
-    // Save to file
-    string path = "/tmp/trussc_test.xml";
-    if (xml.save(path)) {
-        addMessage("Saved to: " + path);
-    }
-
-    // Load from file
-    Xml loaded = loadXml(path);
-    if (!loaded.empty()) {
-        addMessage("Loaded back:");
-        auto loadedRoot = loaded.root();
-        addMessage("  project name: " + string(loadedRoot.attribute("name").value()));
-        addMessage("  version: " + string(loadedRoot.child("info").child("version").text().get()));
-
-        int featureCount = 0;
-        for (auto f : loadedRoot.child("features").children("feature")) {
-            featureCount++;
-        }
-        addMessage("  features count: " + to_string(featureCount));
     }
 
     addMessage("");

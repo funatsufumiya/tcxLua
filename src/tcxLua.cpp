@@ -12,6 +12,70 @@ using namespace tc;
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif // #ifndef _MSC_VER
 
+namespace tcx::lua {
+
+class XmlNodeStorage {
+protected:
+	// std::vector<XmlNode> data;
+    pugi::xml_object_range<pugi::xml_node_iterator> data;
+
+public:
+    //XmlNodeStorage() {};
+    XmlNodeStorage(const pugi::xml_object_range<pugi::xml_node_iterator>& data) : 
+        data(data)
+    {
+    };
+
+public:
+	// using value_type = decltype(data)::value_type;
+	using value_type = pugi::xml_node;
+	using iterator = decltype(data)::iterator;
+	//using size_type = decltype(data)::size_type;
+    using size_type = size_t;
+
+	iterator begin() {
+		return iterator(data.begin());
+	}
+	iterator end() {
+		return iterator(data.end());
+	}
+	size_type size() const noexcept {
+		// return data.size();
+        return std::distance(data.begin(), data.end());
+	}
+    value_type at(size_t index){
+        // NOTE: Lua index starts from 1
+
+        // return *(data.begin() + i);
+        size_t i=0;
+        for(auto it = data.begin(); it != data.end(); ++it){
+            if(i == index - 1){
+                return *it;
+            }
+            ++i;
+        }
+        assert(false);
+    }
+	// size_type max_size() const noexcept {
+	// 	// return data.max_size();
+    //     // return std::distance(data.begin(), data.end()); // WORKAROUND
+    //     return 999999; // WORKAROUND
+	// }
+	// void push_back(const XmlNode& value) {
+	// 	data.push_back(value);
+	// }
+	bool empty() const noexcept {
+		return data.empty();
+	}
+};
+
+} // namespace tcx::lua
+
+namespace sol {
+    template <>
+    struct is_container<tcx::lua::XmlNodeStorage> : std::false_type {};
+} // namespace sol
+
 // namespace tcx::lua {
 
 std::shared_ptr<sol::state> tcxLua::getLuaState(){
@@ -785,6 +849,11 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         "get", &XmlText::get
     );
 
+    sol::usertype<tcx::lua::XmlNodeStorage> xmlstorage_t = lua->new_usertype<tcx::lua::XmlNodeStorage>("XmlNodeStorage",
+	     sol::constructors<tcx::lua::XmlNodeStorage(const pugi::xml_object_range<pugi::xml_node_iterator>&)>(),
+         sol::meta_function::index, &tcx::lua::XmlNodeStorage::at
+    );
+
     sol::usertype<XmlNode> xmlnode_t = lua->new_usertype<XmlNode>("XmlNode",
         sol::constructors<XmlNode()>(),
         "append_attribute", sol::overload(
@@ -817,16 +886,19 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         "first_attribute", &XmlNode::first_attribute,
         "last_attribute", &XmlNode::last_attribute,
         "remove_children", &XmlNode::remove_children,
-        "children", [](XmlNode& x){ return x.children(); }
-        // "children", [](XmlNode& x){ // WORKAROUND // WIP
-        //     auto&& children = x.children();
-        //     std::vector<XmlNode> nodes;
-        //     for(auto&& child : children){
-        //         nodes.push_back(child);
-        //     }
-        //     return sol::nested<std::vector<XmlNode>>(nodes);
-        //     // return sol::make_reference<sol::table>( *lua, nodes );
-        // }
+        // "children", [](XmlNode& x){ return x.children(); }
+        "children", [](XmlNode& x){ // WORKAROUND // WIP
+            //auto&& children = x.children();
+            // std::vector<XmlNode> nodes;
+            tcx::lua::XmlNodeStorage storage(x.children());
+            // for(auto&& child : children){
+            //     storage.push_back(child);
+            // }
+
+            // return sol::nested<std::vector<XmlNode>>(nodes);
+            // // return sol::make_reference<sol::table>( *lua, nodes );
+            return storage;
+        }
     );
 
     sol::usertype<LogLevel> loglevel_t = lua->new_usertype<LogLevel>("LogLevel");
