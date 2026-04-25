@@ -40,3 +40,7 @@ $ cd tools/bingen
 $ uv run main.py ../../../../core/include/TrussC.h
 $ cp trussc_generated.cpp ../../src/generated
 ```
+
+## License
+
+[LICENSE](./LICENSE) is combined result. Please also check [docs/LICENSE_NOTE.md](docs/LICENSE_NOTE.md/) in detail.
