@@ -732,12 +732,21 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         sol::constructors<Json()>()
     );
 
+    lua->set_function("loadXml", &trussc::loadXml);
+    lua->set_function("parseXml", &trussc::parseXml);
+
     sol::usertype<Xml> xml_t = lua->new_usertype<Xml>("Xml",
         sol::constructors<Xml()>(),
         "load", &Xml::load,
         "parse", &Xml::parse,
-        "save", &Xml::save,
-        "toString", &Xml::toString,
+        "save", sol::overload(
+            [](Xml& x, const std::string& s){ return x.save(s); },
+            [](Xml& x, const std::string& s, const std::string& i){ return x.save(s, i); }
+        ),
+        "toString", sol::overload(
+            [](Xml& x){ return x.toString(); },
+            [](Xml& x, const std::string& i){ return x.toString(i); }
+        ),
         "root", [](Xml& x){ return x.root(); },
         "addRoot", &Xml::addRoot,
         "child", &Xml::child,
@@ -748,6 +757,76 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
             [](Xml& x, const std::string& a){ return x.addDeclaration(a); },
             [](Xml& x, const std::string& a, const std::string& b){ return x.addDeclaration(a, b); }
         )
+    );
+
+    sol::usertype<XmlAttribute> xmlattr_t = lua->new_usertype<XmlAttribute>("XmlAttribute",
+        sol::constructors<XmlAttribute()>(),
+        "set", sol::overload( // WORKAROUND
+            [](XmlAttribute& x, pugi::string_view_t s){ return (x = s); },
+            [](XmlAttribute& x, const pugi::char_t* s){ return (x = s); },
+            [](XmlAttribute& x, int s){ return (x = s); },
+            [](XmlAttribute& x, float s){ return (x = s); },
+            [](XmlAttribute& x, long s){ return (x = s); }
+        ),
+        "value", &XmlAttribute::value
+    );
+
+    using XmlText = pugi::xml_text;
+
+    sol::usertype<XmlText> xmltext_t = lua->new_usertype<XmlText>("XmlText",
+        sol::constructors<XmlText()>(),
+        "set", sol::overload( // WORKAROUND
+            [](XmlText& x, pugi::string_view_t s){ return (x = s); },
+            [](XmlText& x, const pugi::char_t* s){ return (x = s); },
+            [](XmlText& x, int s){ return (x = s); },
+            [](XmlText& x, float s){ return (x = s); },
+            [](XmlText& x, long s){ return (x = s); }
+        ),
+        "get", &XmlText::get
+    );
+
+    sol::usertype<XmlNode> xmlnode_t = lua->new_usertype<XmlNode>("XmlNode",
+        sol::constructors<XmlNode()>(),
+        "append_attribute", sol::overload(
+            [](XmlNode& x, pugi::string_view_t n){ return x.append_attribute(n); },
+            [](XmlNode& x, const pugi::char_t* n){ return x.append_attribute(n); }
+        ),
+        "prepend_attribute", sol::overload(
+            [](XmlNode& x, pugi::string_view_t n){ return x.prepend_attribute(n); },
+            [](XmlNode& x, const pugi::char_t* n){ return x.prepend_attribute(n); }
+        ),
+        "append_child", sol::overload(
+            [](XmlNode& x, pugi::string_view_t n){ return x.append_child(n); },
+            [](XmlNode& x, const pugi::char_t* n){ return x.append_child(n); }
+        ),
+        "prepend_child", sol::overload(
+            [](XmlNode& x, pugi::string_view_t n){ return x.prepend_child(n); },
+            [](XmlNode& x, const pugi::char_t* n){ return x.prepend_child(n); }
+        ),
+        "attribute", sol::overload(
+            [](XmlNode& x, pugi::string_view_t n){ return x.attribute(n); },
+            [](XmlNode& x, const pugi::char_t* n){ return x.attribute(n); }
+        ),
+        "child", sol::overload(
+            [](XmlNode& x, pugi::string_view_t n){ return x.child(n); },
+            [](XmlNode& x, const pugi::char_t* n){ return x.child(n); }
+        ),
+        "text", &XmlNode::text,
+        "first_child", &XmlNode::first_child,
+        "last_child", &XmlNode::last_child,
+        "first_attribute", &XmlNode::first_attribute,
+        "last_attribute", &XmlNode::last_attribute,
+        "remove_children", &XmlNode::remove_children,
+        "children", [](XmlNode& x){ return x.children(); }
+        // "children", [](XmlNode& x){ // WORKAROUND // WIP
+        //     auto&& children = x.children();
+        //     std::vector<XmlNode> nodes;
+        //     for(auto&& child : children){
+        //         nodes.push_back(child);
+        //     }
+        //     return sol::nested<std::vector<XmlNode>>(nodes);
+        //     // return sol::make_reference<sol::table>( *lua, nodes );
+        // }
     );
 
     sol::usertype<LogLevel> loglevel_t = lua->new_usertype<LogLevel>("LogLevel");

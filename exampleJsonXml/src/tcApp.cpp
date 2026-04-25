@@ -4,7 +4,7 @@ void tcApp::setup() {
     lua = tcx_lua.getLuaState();
 
     lua->set_function("testJson", [&](){ testJson(); });
-    lua->set_function("testXml", [&](){ testXml(); });
+    //lua->set_function("testXml", [&](){ testXml(); });
 
     std::string setupLuaSource = R"LUA(
         setWindowTitle("jsonXmlExample")
@@ -20,8 +20,60 @@ void tcApp::setup() {
             end
         end
 
+        function testXml()
+            addMessage("--- XML Test ---")
+
+            -- Create XML
+            local xml = Xml.new()
+            xml:addDeclaration()
+
+            local root = xml:addRoot("project")
+            root:append_attribute("name"):set("TrussC")
+
+            local info = root:append_child("info")
+            info:append_child("version"):text():set("0.1")
+            info:append_child("author"):text():set("TrussC Team")
+
+            local features = root:append_child("features")
+            features:append_child("feature"):text():set("graphics")
+            features:append_child("feature"):text():set("audio")
+            features:append_child("feature"):text():set("events")
+
+            -- Convert to string
+            local xmlStr = xml:toString()
+            addMessage("Created XML:")
+
+            -- Display each line
+            for line in xmlStr:gmatch("([^\n]*)\n?") do
+                addMessage("  " .. line)
+            end
+
+            -- Save to file
+            local path = "/tmp/trussc_test.xml"
+            if xml:save(path) then
+                addMessage("Saved to: " .. path)
+            end
+
+            -- Load from file
+            local loaded = loadXml(path)
+            if not loaded:empty() then
+                addMessage("Loaded back:")
+                local loadedRoot = loaded:root()
+                addMessage("  project name: " .. loadedRoot:attribute("name"):value())
+                addMessage("  version: " .. loadedRoot:child("info"):child("version"):text():get())
+
+                -- local featureCount = 0
+                -- for f in loadedRoot:child("features"):children("feature") do
+                --     featureCount = featureCount + 1
+                -- end
+                -- addMessage("  features count: " .. featureCount)
+            end
+
+            addMessage("")
+        end
+
         addMessage("=== JSON/XML Example ===")
-        addMessage("");
+        addMessage("")
         addMessage("Press 'j' to test JSON")
         addMessage("Press 'x' to test XML")
         addMessage("")
@@ -81,8 +133,8 @@ void tcApp::keyPressed(int key) {
         isFirstKey = false;
     }
 
-    // lua->script("keyPressed(" + std::to_string(key) + ")");
-    ((*lua)["keyPressed"])(key);
+    lua->script("keyPressed(" + std::to_string(key) + ")");
+    // ((*lua)["keyPressed"])(key);
 }
 
 void tcApp::addMessage(const std::string& msg){
