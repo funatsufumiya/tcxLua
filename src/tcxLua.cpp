@@ -1042,6 +1042,38 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
         "getBounds", &Path::getBounds,
         "getPerimeter", &Path::getPerimeter
     );
+
+    sol::usertype<EaseType> easetype_t = lua->new_usertype<EaseType>("EaseType",
+        sol::meta_function::equal_to, [](EaseType a, EaseType b){ return a == b; },
+        "Linear", sol::var(EaseType::Linear),
+        "Quad", sol::var(EaseType::Quad),
+        "Cubic", sol::var(EaseType::Cubic),
+        "Quart", sol::var(EaseType::Quart),
+        "Quint", sol::var(EaseType::Quint),
+        "Sine", sol::var(EaseType::Sine),
+        "Expo", sol::var(EaseType::Expo),
+        "Circ", sol::var(EaseType::Circ),
+        "Back", sol::var(EaseType::Back),
+        "Elastic", sol::var(EaseType::Elastic),
+        "Bounce", sol::var(EaseType::Bounce)
+    );
+    sol::usertype<EaseMode> easemode_t = lua->new_usertype<EaseMode>("EaseMode",
+        sol::meta_function::equal_to, [](EaseMode a, EaseMode b){ return a == b; },
+        "In", sol::var(EaseMode::In),
+        "Out", sol::var(EaseMode::Out),
+        "InOut", sol::var(EaseMode::InOut)
+    );
+
+    // using TweenFloat = Tween<float>;
+
+    // sol::usertype<TweenFloat> tween_t = lua->new_usertype<TweenFloat>("TweenFloat",
+    //     sol::constructors<
+    //         TweenFloat(),
+    //         TweenFloat(float, float, float),
+    //         TweenFloat(float, float, float, EaseType),
+    //         TweenFloat(float, float, float, EaseType, EaseMode),
+    //         TweenFloat(TweenFloat&&)>()
+    // );
 }
 
 struct Colors{};
