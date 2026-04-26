@@ -2,24 +2,13 @@
 
 #include "sol/sol.hpp"
 
-inline int lua_exception_handler(lua_State* L,
-     sol::optional<const std::exception&> maybe_exception,
-     sol::string_view description)
-{
-    // do nothing now
-    return 1;
-}
-
 void tcApp::setup() {
     lua.open_libraries(sol::lib::base);
-    lua.set_exception_handler(lua_exception_handler);
 
     fbo.allocate(getWidth(), getHeight());
 
     reset();
 }
-
-
 
 void tcApp::reset() {
     x = getWidth() / 2;
