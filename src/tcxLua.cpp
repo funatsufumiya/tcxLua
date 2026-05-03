@@ -191,6 +191,11 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     vec2_type["x"] = &Vec2::x;
     vec2_type["y"] = &Vec2::y;
 
+    vec2_type["set"] = sol::overload(
+        [](Vec2& v, const Vec2& a){ return v.set(a); },
+        [](Vec2& v, float a, float b){ return v.set(a,b); }
+    );
+
     vec2_type["length"] = &Vec2::length;
     vec2_type["lengthSquared"] = &Vec2::lengthSquared;
     vec2_type["normalized"] = &Vec2::normalized;
@@ -238,6 +243,11 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     vec3_type["y"] = &Vec3::y;
     vec3_type["z"] = &Vec3::z;
 
+    vec3_type["set"] = sol::overload(
+        [](Vec3& v, const Vec3& a){ return v.set(a); },
+        [](Vec3& v, float a, float b, float c){ return v.set(a,b,c); }
+    );
+
     vec3_type["length"] = &Vec3::length;
     vec3_type["lengthSquared"] = &Vec3::lengthSquared;
     vec3_type["normalized"] = &Vec3::normalized;
@@ -272,6 +282,11 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     vec4_type["y"] = &Vec4::y;
     vec4_type["z"] = &Vec4::z;
     vec4_type["w"] = &Vec4::w;
+
+    vec4_type["set"] = sol::overload(
+        [](Vec4& v, const Vec4& a){ return v.set(a); },
+        [](Vec4& v, float a, float b, float c, float d){ return v.set(a,b,c,d); }
+    );
 
     vec4_type["length"] = &Vec4::length;
     vec4_type["lengthSquared"] = &Vec4::lengthSquared;
