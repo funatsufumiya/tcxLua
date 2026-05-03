@@ -376,6 +376,14 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
     color_type["b"] = &Color::b;
     color_type["a"] = &Color::a;
 
+    color_type["set"] = sol::overload(
+        [](Color& v, const Color& a){ return v.set(a); },
+        [](Color& v, float a, float b, float c, float d){ return v.set(a,b,c,d); },
+        [](Color& v, float a, float b, float c){ return v.set(a,b,c); },
+        [](Color& v, float a, float b){ return v.set(a,b); },
+        [](Color& v, float a){ return v.set(a); }
+    );
+
     color_type["fromBytes"] = &Color::fromBytes;
     color_type["fromHex"] = &Color::fromHex;
     color_type["fromHSB"] = &Color::fromHSB;
@@ -1025,6 +1033,10 @@ void tcxLua::setTypeBindings(const std::shared_ptr<sol::state>& lua){
             Rect(const Rect&), Rect(Rect&&)>(),
         "x", &Rect::x,
         "y", &Rect::y,
+        "set", sol::overload(
+            [](Rect& v, const Vec2& a, float c, float d){ return v.set(a,c,d); },
+            [](Rect& v, float a, float b, float c, float d){ return v.set(a,b,c,d); }
+        ),
         "width", &Rect::width,
         "height", &Rect::height,
         "getRight", &Rect::getRight,
