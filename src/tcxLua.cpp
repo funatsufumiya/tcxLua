@@ -33,7 +33,10 @@ std::shared_ptr<sol::state> tcxLua::getLuaState(){
         sol::lib::base,
         sol::lib::math,
         sol::lib::string,
-        sol::lib::table
+        sol::lib::table,
+        sol::lib::package,
+        sol::lib::coroutine,
+        sol::lib::io
     );
 
     setBindings(lua);
