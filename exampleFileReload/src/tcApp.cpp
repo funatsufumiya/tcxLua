@@ -25,19 +25,19 @@ std::string sep = "/";
 void tcApp::reloadLuaFile(){
 #ifdef FILE_RELOAD_SUPPORTED
     std::string luaScriptBaseName = "sketch.lua";
-    std::string luaScriptPath = getDataPath(luaScriptBaseName);
+    fs::path luaScriptPath = getDataPath(luaScriptBaseName);
 
     if(fileExists(luaScriptPath)){
-        sol::optional<sol::error> result = lua->safe_script_file(luaScriptPath);
+        sol::optional<sol::error> result = lua->safe_script_file(luaScriptPath.string());
         if (result.has_value()) {
             std::cerr << "Lua execution failed: "
                     << result.value().what() << std::endl;
         }
     }else{
-        tcLogError("tcApp") << "Lua file not found at: " << luaScriptPath;
+        logError("tcApp") << "Lua file not found at: " << luaScriptPath;
     }
 #else
-    tcLogWarning("tcApp") << "[file reload] sorry, this platform currently not supported";
+    logWarning("tcApp") << "[file reload] sorry, this platform currently not supported";
 #endif // FILE_RELOAD_SUPPORTED
 }
 
@@ -94,11 +94,11 @@ void tcApp::keyPressed(int key) {
 
 void tcApp::keyReleased(int key) {}
 
-void tcApp::mousePressed(Vec2 pos, int button) {}
-void tcApp::mouseReleased(Vec2 pos, int button) {}
-void tcApp::mouseMoved(Vec2 pos) {}
-void tcApp::mouseDragged(Vec2 pos, int button) {}
-void tcApp::mouseScrolled(Vec2 delta) {}
+void tcApp::mousePressed(const MouseEventArgs& e) {}
+void tcApp::mouseReleased(const MouseEventArgs& e) {}
+void tcApp::mouseMoved(const MouseMoveEventArgs& e) {}
+void tcApp::mouseDragged(const MouseDragEventArgs& e) {}
+void tcApp::mouseScrolled(const ScrollEventArgs& e) {}
 
 void tcApp::windowResized(int width, int height) {}
 void tcApp::filesDropped(const vector<string>& files) {}
